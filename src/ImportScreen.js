@@ -44,11 +44,11 @@ export class ImportWalletScreen extends React.Component {
                     marginLeft: 30,
                     marginRight: 10,
                 }}>
-                    <Text style={{ color: this.props.screenProps.theme.secondaryColour, fontSize: 25, marginBottom: 5 }}>
+                    <Text style={{ color: this.props.screenProps.theme.primaryColour, fontSize: 25, marginBottom: 5 }}>
                         When did you create your wallet?
                     </Text>
 
-                    <Text style={{ color: this.props.screenProps.theme.secondaryColour, fontSize: 16, marginBottom: 60 }}>
+                    <Text style={{ color: this.props.screenProps.theme.primaryColour, fontSize: 16, marginBottom: 60 }}>
                         This helps us scan your wallet faster.
                     </Text>
                 </View>
@@ -127,7 +127,7 @@ export class ImportKeysOrSeedScreen extends React.Component {
                         <Button
                             title="25 Word Mnemonic Seed"
                             onPress={() => this.props.navigation.navigate('ImportSeed', { scanHeight: this.scanHeight })}
-                            color={this.props.screenProps.theme.primaryColour}
+                            color={this.props.screenProps.theme.secondaryColour}
                         />
                     </View>
 
@@ -135,7 +135,7 @@ export class ImportKeysOrSeedScreen extends React.Component {
                         <Button
                             title="Private Spend + Private View Key"
                             onPress={() => this.props.navigation.navigate('ImportKeys', { scanHeight: this.scanHeight })}
-                            color={this.props.screenProps.theme.primaryColour}
+                            color={this.props.screenProps.theme.secondaryColour}
                         />
                     </View>
                 </View>
