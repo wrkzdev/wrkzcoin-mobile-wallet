@@ -589,7 +589,12 @@ export class SwapNodeScreen extends React.Component {
 
         savePreferencesToDatabase(Globals.preferences);
 
-        await Globals.wallet.swapNode(Globals.getDaemon());
+        const daemon = new Daemon(node.url, Number(node.port));
+
+        daemon.config = Config;
+
+        // await Globals.wallet.swapNode(Globals.getDaemon());
+        await Globals.wallet.swapNode(daemon);
 
         toastPopUp('Node swap complete.');
     }

@@ -15,12 +15,12 @@ const Config = new function() {
     /**
      * If you can't figure this one out, I don't have high hopes
      */
-    this.coinName = 'TurtleCoin';
+    this.coinName = 'WrkzCoin';
 
     /**
      * Prefix for URI encoded addresses
      */
-    this.uriPrefix = 'turtlecoin://';
+    this.uriPrefix = 'wrkzcoin://';
 
     /**
      * How often to save the wallet, in milliseconds
@@ -35,9 +35,9 @@ const Config = new function() {
 
     /**
      * The address prefix your coin uses - you can find this in CryptoNoteConfig.h.
-     * In TurtleCoin, this converts to TRTL
+     * In TurtleCoin, this converts to Wrkz
      */
-    this.addressPrefix = 3914525;
+    this.addressPrefix = 999730;
 
     /**
      * Request timeout for daemon operations in milliseconds
@@ -47,7 +47,7 @@ const Config = new function() {
     /**
      * The block time of your coin, in seconds
      */
-    this.blockTargetTime = 30;
+    this.blockTargetTime = 60;
 
     /**
      * How often to process blocks, in millseconds
@@ -74,7 +74,7 @@ const Config = new function() {
     /**
      * Your coins 'ticker', generally used to refer to the coin, i.e. 123 TRTL
      */
-    this.ticker = 'TRTL';
+    this.ticker = 'WRKZ';
 
     /**
      * Most people haven't mined any blocks, so lets not waste time scanning
@@ -85,26 +85,30 @@ const Config = new function() {
     /**
      * The minimum fee allowed for transactions, in ATOMIC units
      */
-    this.minimumFee = 10;
+    this.minimumFee = 50000;
 
     /**
      * Mapping of height to mixin maximum and mixin minimum
      */
     this.mixinLimits = new MixinLimits([
-        /* Height: 440,000, minMixin: 0, maxMixin: 100, defaultMixin: 3 */
-        new MixinLimit(440000, 0, 100, 3),
+        /* Height: 10,000, minMixin: 0, maxMixin: 30, defaultMixin: 3 */
+        new MixinLimit(10000, 0, 30, 3),
 
-        /* At height of 620000, static mixin of 7 */
-        new MixinLimit(620000, 7),
+        /* At height of 302,400 */
+        new MixinLimit(302400, 3, 7, 3),
 
-        /* At height of 800000, static mixin of 3 */
-        new MixinLimit(800000, 3),
+        /* At height of 430,000 */
+        new MixinLimit(430000, 0, 7, 3),
+
+        /* At height of 658,500 */
+        new MixinLimit(658500, 1, 3, 3),
+
     ], 3 /* Default mixin of 3 before block 440,000 */);
 
     /**
      * The length of a standard address for your coin
      */
-    this.standardAddressLength = 99;
+    this.standardAddressLength = 98;
 
     /**
      * The length of an integrated address for your coin - It's the same as
@@ -113,7 +117,7 @@ const Config = new function() {
      * chunks of 8 chars at once into blocks of 11 chars, we can calculate
      * this automatically
      */
-    this.integratedAddressLength = 99 + ((64 * 11) / 8);
+    this.integratedAddressLength = 98 + ((64 * 11) / 8);
 
     /**
      * Use our native func instead of JS slowness
@@ -163,17 +167,17 @@ const Config = new function() {
      * should be equal to your current block count. If it's significantly different,
      * you can offset your timestamp to fix the discrepancy
      */
-    this.chainLaunchTimestamp = new Date(1000 * 1513031505);
+    this.chainLaunchTimestamp = new Date(1000 * 1529831318);
 
     /**
      * Fee to take on all transactions, in percentage
      */
-    this.devFeePercentage = 0.5;
+    this.devFeePercentage = 0.0;
 
     /**
      * Address to send dev fee to
      */
-    this.devFeeAddress = 'TRTLv1E3ThL66fHthRHyzPSDqeUazPA9eBQYkuRnp8svKgvdoecQtqhSRaD59CEuH8XnYsw3YGtw1RWsQSqtHLqUXu4tvk9LryR';
+    this.devFeeAddress = 'WrkzRNDQDwFCBynKPc459v3LDa1gEGzG3j962tMUBko1fw9xgdaS9mNiGMgA9s1q7hS1Z8SGRVWzcGc8Sh8xsvfZ6u2wJEtoZB';
 
     /**
      * Base url for price API
@@ -188,24 +192,24 @@ const Config = new function() {
      * Default daemon to use. Can either be a BlockchainCacheApi(baseURL, SSL),
      * or a ConventionalDaemon(url, port).
      */
-    this.defaultDaemon = new Daemon('blockapi.turtlepay.io', 443);
+    this.defaultDaemon = new Daemon('wrkz.bot.tips', 443);
 
     /**
      * A link to where a bug can be reported for your wallet. Please update
      * this if you are forking, so we don't get reported bugs for your wallet...
      *
      */
-    this.repoLink = 'https://github.com/turtlecoin/turtlecoin-mobile-wallet/issues';
+    this.repoLink = 'https://github.com/wrkzdev/wrkzcoin-mobile-wallet/issues';
 
     /**
      * This only controls the name in the settings screen.
      */
-    this.appName = 'TonChan';
+    this.appName = 'WrkzMolet';
 
     /**
      * Slogan phrase during wallet CreateScreen
      */
-    this.sloganCreateScreen = 'Fast. Safe. Easy.';
+    this.sloganCreateScreen = 'Your WRKZ Mobile Wallet!';
 
     /**
      * Displayed in the settings screen
@@ -215,7 +219,7 @@ const Config = new function() {
     /**
      * Base URL for us to chuck a hash on the end, and find a transaction
      */
-    this.explorerBaseURL = 'https://explorer.turtlecoin.lol/?search=';
+    this.explorerBaseURL = 'https://myexplorer.wrkz.work/?hash=';
 
     /**
      * A link to your app on the Apple app store. Currently blank because we
@@ -226,13 +230,13 @@ const Config = new function() {
     /**
      * A link to your app on the google play store
      */
-    this.googlePlayLink = 'https://play.google.com/store/apps/details?id=com.tonchan';
+    this.googlePlayLink = 'https://play.google.com/store/apps/details?id=work.wrkz.wrkzmolet';
 
     /**
      * A url to fetch node info from. Should follow the turtlepay format 
      * detailed here: https://docs.turtlepay.io/blockapi/
      */
-    this.nodeListURL = 'https://blockapi.turtlepay.io/node/list';
+    this.nodeListURL = 'https://node.wrkz.work/list';
 };
 
 module.exports = Config;

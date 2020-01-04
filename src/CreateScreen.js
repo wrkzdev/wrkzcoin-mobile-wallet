@@ -39,12 +39,6 @@ export class WalletOptionScreen extends React.Component {
                         source={this.props.screenProps.theme.logo}
                         style={Styles.logo}
                     />
-                    <Text style={{
-                        fontSize: 20,
-                        color: this.props.screenProps.theme.slightlyMoreVisibleColour,
-                    }}>
-                        {Config.sloganCreateScreen}
-                    </Text>
                 </View>
 
                 <View style={[Styles.buttonContainer, {bottom: 100, position: 'absolute', alignItems: 'stretch', justifyContent: 'center', width: '100%'}]}>
@@ -52,7 +46,7 @@ export class WalletOptionScreen extends React.Component {
                         title='Create New Wallet'
                         /* Request a pin for the new wallet */
                         onPress={() => this.props.navigation.navigate('Disclaimer', { nextRoute: 'CreateWallet' })}
-                        color={this.props.screenProps.theme.primaryColour}
+                        color={this.props.screenProps.theme.secondaryColour}
                     />
                 </View>
 
@@ -61,7 +55,7 @@ export class WalletOptionScreen extends React.Component {
                         title='Recover Wallet'
                         /* Get the import data */
                         onPress={() => this.props.navigation.navigate('Disclaimer', { nextRoute: 'ImportWallet' })}
-                        color={this.props.screenProps.theme.primaryColour}
+                        color={this.props.screenProps.theme.secondaryColour}
                     />
                 </View>
 

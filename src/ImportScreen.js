@@ -44,11 +44,11 @@ export class ImportWalletScreen extends React.Component {
                     marginLeft: 30,
                     marginRight: 10,
                 }}>
-                    <Text style={{ color: this.props.screenProps.theme.primaryColour, fontSize: 25, marginBottom: 5 }}>
+                    <Text style={{ color: this.props.screenProps.theme.secondaryColour, fontSize: 25, marginBottom: 5 }}>
                         When did you create your wallet?
                     </Text>
 
-                    <Text style={{ color: this.props.screenProps.theme.primaryColour, fontSize: 16, marginBottom: 60 }}>
+                    <Text style={{ color: this.props.screenProps.theme.secondaryColour, fontSize: 16, marginBottom: 60 }}>
                         This helps us scan your wallet faster.
                     </Text>
                 </View>
@@ -62,7 +62,7 @@ export class ImportWalletScreen extends React.Component {
                         <Button
                             title="Pick a month"
                             onPress={() => this.props.navigation.navigate('PickMonth')}
-                            color={this.props.screenProps.theme.primaryColour}
+                            color={this.props.screenProps.theme.secondaryColour}
                         />
                     </View>
 
@@ -70,7 +70,7 @@ export class ImportWalletScreen extends React.Component {
                         <Button
                             title="Pick an approximate block height"
                             onPress={() => this.props.navigation.navigate('PickBlockHeight')}
-                            color={this.props.screenProps.theme.primaryColour}
+                            color={this.props.screenProps.theme.secondaryColour}
                         />
                     </View>
 
@@ -78,7 +78,7 @@ export class ImportWalletScreen extends React.Component {
                         <Button
                             title="Pick an exact block height"
                             onPress={() => this.props.navigation.navigate('PickExactBlockHeight')}
-                            color={this.props.screenProps.theme.primaryColour}
+                            color={this.props.screenProps.theme.secondaryColour}
                         />
                     </View>
 
@@ -86,7 +86,7 @@ export class ImportWalletScreen extends React.Component {
                         <Button
                             title="I don't Know"
                             onPress={() => this.props.navigation.navigate('ImportKeysOrSeed', { scanHeight: 0 })}
-                            color={this.props.screenProps.theme.primaryColour}
+                            color={this.props.screenProps.theme.secondaryColour}
                         />
                     </View>
                 </View>

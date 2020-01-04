@@ -1,4 +1,4 @@
-package com.tonchan;
+package work.wrkz.wrkzmolet;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;

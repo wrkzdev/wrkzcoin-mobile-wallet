@@ -1,4 +1,4 @@
-package com.tonchan;
+package work.wrkz.wrkzmolet;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;

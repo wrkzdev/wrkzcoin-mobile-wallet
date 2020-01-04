@@ -1,4 +1,4 @@
-package com.tonchan;
+package work.wrkz.wrkzmolet;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,7 +6,7 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.tonchan.BuildConfig;
+import work.wrkz.wrkzmolet.BuildConfig;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -300,7 +300,7 @@ public class TurtleCoinModule extends ReactContextBaseJavaModule {
             connection.setRequestProperty("Accept", "application/json");
 
             /* tonchan-vx.x.x */
-            connection.setRequestProperty("User-Agent", "tonchan-v1.2.2");
+            connection.setRequestProperty("User-Agent", "wrkzmolet-v1.0.2");
 
             /* Indicate we have a POST body */
             connection.setDoOutput(true);

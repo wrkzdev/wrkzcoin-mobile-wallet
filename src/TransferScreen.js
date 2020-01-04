@@ -270,7 +270,7 @@ export class TransferScreen extends React.Component {
                     </View>
 
                     <Text style={{
-                        color: this.props.screenProps.theme.primaryColour,
+                        color: this.props.screenProps.theme.slightlyMoreVisibleColour,
                         fontSize: 18,
                         marginLeft: 30,
                         marginTop: 20,

@@ -1,6 +1,6 @@
-package com.tonchan;
+package work.wrkz.wrkzmolet;
 
-import com.tonchan.BuildConfig;
+import work.wrkz.wrkzmolet.BuildConfig;
 
 import android.app.Application;
 import android.content.Intent;
@@ -67,7 +67,7 @@ public class MainApplication extends Application implements ReactApplication {
     upgradeSecurityProvider();
     
     /* tonchan-vx.x.x */
-    setUserAgent("tonchan-v1.2.2");
+    setUserAgent("wrkzmolet-v1.0.2");
 
     SoLoader.init(this, /* native exopackage */ false);
   }

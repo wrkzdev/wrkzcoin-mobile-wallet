@@ -12,35 +12,35 @@ export const Themes = {
         /**
          * The primary colour used by the wallet, for TurtleCoin this is green
          */
-        primaryColour: '#40C18E',
+        primaryColour: '#000000',
 
         /**
          * Colour for the background circles on the pin page
          */
-        pinCodeBackgroundColour: '#D8F3E8',
+        pinCodeBackgroundColour: '#2a8963',
 
         /**
          * Colour for the pin code numbers
          * Note that when you click them, a different theme is applied.
          */
-        pinCodeForegroundColour: '#40C18E',
+        pinCodeForegroundColour: '#000000',
 
         /**
          * We chose to use a darker green here. It is very rarely used.
          */
-        secondaryColour: '#00853D',
+        secondaryColour: '#808080',
 
         /**
          * Terrible name, lol. This is used things which shouldn't pop out
          * much, like the 'TOTAL BALANCE' text.
          */
-        notVeryVisibleColour: 'lightgray',
+        notVeryVisibleColour: '#999999',
 
         /**
          * This is used for the same sort of things as notVeryVisibleColour,
          * but pops out a little more. Used for things like the $ balance value.
          */
-        slightlyMoreVisibleColour: 'gray',
+        slightlyMoreVisibleColour: '#404040',
 
         /**
          * Colour for disabled things, like bottom buttons
@@ -75,17 +75,17 @@ export const Themes = {
         /**
          * Background colour for every component
          */
-        backgroundColour: '#2C2F33',
+        backgroundColour: '#737373',
 
         /**
          * The primary colour used by the wallet, for TurtleCoin this is green
          */
-        primaryColour: '#40C18E',
+        primaryColour: '#FFFFFF',
 
         /**
          * Colour for the background circles on the pin page
          */
-        pinCodeBackgroundColour: 'gray',
+        pinCodeBackgroundColour: '#404040',
 
         /**
          * Colour for the pin code numbers
@@ -96,29 +96,29 @@ export const Themes = {
         /**
          * We chose to use a darker green here. It is very rarely used.
          */
-        secondaryColour: '#00853D',
+        secondaryColour: '#808080',
 
         /**
          * Terrible name, lol. This is used things which shouldn't pop out
          * much, like the 'TOTAL BALANCE' text.
          */
-        notVeryVisibleColour: 'gray',
+        notVeryVisibleColour: '#f2f2f2',
 
         /**
          * This is used for the same sort of things as notVeryVisibleColour,
          * but pops out a little more. Used for things like the $ balance value.
          */
-        slightlyMoreVisibleColour: 'lightgray',
+        slightlyMoreVisibleColour: '#e6e6e6',
 
         /**
          * Colour for disabled bottom buttons
          */
-        disabledColour: '#23272A',
+        disabledColour: '#e3e6e8',
 
         /**
          * Colour for the address book icon background
          */
-        iconColour: '#23272A',
+        iconColour: '#e3e6e8',
 
         /**
          * Filepath of the logo to use.
