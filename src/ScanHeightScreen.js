@@ -53,7 +53,7 @@ export class PickMonthScreen extends React.Component {
                 <View style={{ justifyContent: 'center', alignItems: 'stretch' }}>
                     <MonthSelectorCalendar
                         minDate={moment(Config.chainLaunchTimestamp)}
-                        selectedBackgroundColor={this.props.screenProps.theme.primaryColour}
+                        selectedBackgroundColor={this.props.screenProps.theme.pinCodeBackgroundColour}
                         monthTextStyle={{
                             color: this.props.screenProps.theme.primaryColour,
                         }}
@@ -89,7 +89,7 @@ export class PickMonthScreen extends React.Component {
                         selectedDate={this.state.month}
                         onMonthTapped={(date) => this.setState({ month: date})}
                         containerStyle={{
-                            backgroundColor: this.props.screenProps.theme.backgroundColour,
+                            backgroundColor: this.props.screenProps.theme.secondaryColour,
                         }}
                     />
                 </View>
@@ -280,7 +280,7 @@ export class PickBlockHeightScreen extends React.Component {
                                 <Button
                                     title={startHeight + ' - ' + endHeight}
                                     onPress={() => this.props.navigation.navigate('ImportKeysOrSeed', { scanHeight: startHeight })}
-                                    color={this.props.screenProps.theme.primaryColour}
+                                    color={this.props.screenProps.theme.secondaryColour}
                                 />
                             </View>
                         );
