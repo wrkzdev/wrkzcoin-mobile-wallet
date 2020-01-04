@@ -700,7 +700,7 @@ export class ModifyPayeeScreen extends React.Component {
 
                                 this.props.navigation.goBack();
                             }}
-                            color={this.props.screenProps.theme.primaryColour}
+                            color={this.props.screenProps.theme.secondaryColour}
                             disabled={!this.state.addressValid || !this.state.nicknameValid || !this.state.paymentIDValid}
                         />
                     </View>
