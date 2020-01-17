@@ -806,10 +806,15 @@ export class ConfirmScreen extends React.Component {
             ]);
         }
 
+        /* Add fixed fee before forked fee per byte */
+        const [walletHeight, localHeight, networkHeight] = Globals.wallet.getSyncStatus();
+
+        let txFee = Config.minimumFee;
+
         const result = await Globals.wallet.sendTransactionAdvanced(
             payments, // destinations,
             undefined, // mixin
-            undefined, // fee
+            (networkHeight >= Config.feePerByteHeight) ? undefined : {isFixedFee: true, fixedFee: txFee}, // fee
             this.state.payee.paymentID,
             undefined, // subWalletsToTakeFrom
             undefined, // changeAddress
@@ -818,12 +823,7 @@ export class ConfirmScreen extends React.Component {
         );
 
         if (result.success) {
-            /* Add fixed fee before forked fee per byte */
-            const [walletHeight, localHeight, networkHeight] = Globals.wallet.getSyncStatus();
-            
             let actualAmount = this.state.amount;
-
-            let txFee = Config.minimumFee;
 
             if (networkHeight >= Config.feePerByteHeight) {
                 txFee = result.fee;
