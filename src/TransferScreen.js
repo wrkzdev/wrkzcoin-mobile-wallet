@@ -818,7 +818,16 @@ export class ConfirmScreen extends React.Component {
         );
 
         if (result.success) {
+            /* Add fixed fee before forked fee per byte */
+            const [walletHeight, localHeight, networkHeight] = Globals.wallet.getSyncStatus();
+            
             let actualAmount = this.state.amount;
+
+            let txFee = Config.minimumFee;
+
+            if (networkHeight >= Config.feePerByteHeight) {
+                txFee = result.fee;
+            }
 
             if (this.state.sendAll) {
                 let transactionSum = 0;
@@ -831,7 +840,7 @@ export class ConfirmScreen extends React.Component {
                 }
 
                 actualAmount = transactionSum
-                             - result.fee
+                             - txFee
                              - this.state.devFee
                              - this.state.nodeFee;
             }
@@ -839,10 +848,10 @@ export class ConfirmScreen extends React.Component {
             this.setState({
                 preparedTransaction: true,
                 haveError: false,
-                fee: result.fee,
+                fee: txFee,
                 hash: result.transactionHash,
                 recipientAmount: actualAmount,
-                feeTotal: result.fee + this.state.devFee + this.state.nodeFee,
+                feeTotal: txFee + this.state.devFee + this.state.nodeFee,
             });
         } else {
             this.setState({

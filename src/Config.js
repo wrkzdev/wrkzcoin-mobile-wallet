@@ -88,6 +88,11 @@ const Config = new function() {
     this.minimumFee = 50000;
 
     /**
+     * Fee per byte height
+     */
+    this.feePerByteHeight = 832000;
+
+    /**
      * Mapping of height to mixin maximum and mixin minimum
      */
     this.mixinLimits = new MixinLimits([
@@ -152,7 +157,7 @@ const Config = new function() {
     /**
      * Memory to use for storing downloaded blocks - 3MB
      */
-    this.blockStoreMemoryLimit = 1024 * 1024 * 3;
+    this.blockStoreMemoryLimit = 1024 * 1024 * 32;
 
     /**
      * Amount of blocks to request from the daemon at once
