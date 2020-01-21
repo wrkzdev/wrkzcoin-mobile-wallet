@@ -785,11 +785,16 @@ export class ConfirmScreen extends React.Component {
     async prepareTransaction() {
         const payments = [];
 
+        /* Add fixed fee before forked fee per byte */
+        const [walletHeight, localHeight, networkHeight] = Globals.wallet.getSyncStatus();
+
+        let txFee = Config.minimumFee;
+
         /* User payment */
         if (this.state.sendAll) {
             payments.push([
                 this.state.payee.address,
-                1, /* Amount does not matter for sendAll destination */
+                (networkHeight >= Config.feePerByteHeight) ? 1 : (this.state.unlockedBalance - this.state.nodeFee - txFee), /* Amount does not matter for sendAll destination */
             ]);
         } else {
             payments.push([
@@ -805,11 +810,6 @@ export class ConfirmScreen extends React.Component {
                 this.state.devFee,
             ]);
         }
-
-        /* Add fixed fee before forked fee per byte */
-        const [walletHeight, localHeight, networkHeight] = Globals.wallet.getSyncStatus();
-
-        let txFee = Config.minimumFee;
 
         const result = await Globals.wallet.sendTransactionAdvanced(
             payments, // destinations,

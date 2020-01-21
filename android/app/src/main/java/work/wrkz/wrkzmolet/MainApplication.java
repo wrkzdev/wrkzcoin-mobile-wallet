@@ -67,7 +67,7 @@ public class MainApplication extends Application implements ReactApplication {
     upgradeSecurityProvider();
     
     /* tonchan-vx.x.x */
-    setUserAgent("wrkzmolet-v1.1.2");
+    setUserAgent("wrkzmolet-v1.1.3");
 
     SoLoader.init(this, /* native exopackage */ false);
   }
