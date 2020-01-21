@@ -204,7 +204,7 @@ const Config = new function() {
      * this if you are forking, so we don't get reported bugs for your wallet...
      *
      */
-    this.repoLink = 'https://github.com/wrkzdev/wrkzcoin-mobile-wallet/issues';
+    this.repoLink = 'https://github.com/wrkzcoin/wrkzcoin-mobile-wallet/issues';
 
     /**
      * This only controls the name in the settings screen.
