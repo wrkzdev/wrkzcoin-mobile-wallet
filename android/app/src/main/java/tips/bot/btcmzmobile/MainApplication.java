@@ -1,6 +1,6 @@
-package work.wrkz.wrkzmolet;
+package tips.bot.btcmzmobile;
 
-import work.wrkz.wrkzmolet.BuildConfig;
+import tips.bot.btcmzmobile.BuildConfig;
 
 import android.app.Application;
 import android.content.Intent;
@@ -67,7 +67,7 @@ public class MainApplication extends Application implements ReactApplication {
     upgradeSecurityProvider();
     
     /* tonchan-vx.x.x */
-    setUserAgent("wrkzmolet-v1.1.3");
+    setUserAgent("btcmzmobile-v1.2.1");
 
     SoLoader.init(this, /* native exopackage */ false);
   }

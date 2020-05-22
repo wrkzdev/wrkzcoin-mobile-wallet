@@ -130,7 +130,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "work.wrkz.wrkzmolet"
+        applicationId "tips.bot.btcmzmobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 121

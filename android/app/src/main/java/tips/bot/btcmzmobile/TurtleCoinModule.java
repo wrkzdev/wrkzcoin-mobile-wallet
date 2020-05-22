@@ -1,4 +1,4 @@
-package work.wrkz.wrkzmolet;
+package tips.bot.btcmzmobile;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,7 +6,7 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 
-import work.wrkz.wrkzmolet.BuildConfig;
+import tips.bot.btcmzmobile.BuildConfig;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -300,7 +300,7 @@ public class TurtleCoinModule extends ReactContextBaseJavaModule {
             connection.setRequestProperty("Accept", "application/json");
 
             /* tonchan-vx.x.x */
-            connection.setRequestProperty("User-Agent", "wrkzmolet-v1.1.3");
+            connection.setRequestProperty("User-Agent", "btcmzmobile-v1.2.1");
 
             /* Indicate we have a POST body */
             connection.setDoOutput(true);

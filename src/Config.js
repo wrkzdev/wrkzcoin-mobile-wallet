@@ -15,12 +15,12 @@ const Config = new function() {
     /**
      * If you can't figure this one out, I don't have high hopes
      */
-    this.coinName = 'WrkzCoin';
+    this.coinName = 'BitcoinMono';
 
     /**
      * Prefix for URI encoded addresses
      */
-    this.uriPrefix = 'wrkzcoin://';
+    this.uriPrefix = 'bitcoinmono://';
 
     /**
      * How often to save the wallet, in milliseconds
@@ -31,13 +31,13 @@ const Config = new function() {
      * The amount of decimal places your coin has, e.g. TurtleCoin has two
      * decimals
      */
-    this.decimalPlaces = 2;
+    this.decimalPlaces = 4;
 
     /**
      * The address prefix your coin uses - you can find this in CryptoNoteConfig.h.
      * In TurtleCoin, this converts to Wrkz
      */
-    this.addressPrefix = 999730;
+    this.addressPrefix = 3771344;
 
     /**
      * Request timeout for daemon operations in milliseconds
@@ -47,7 +47,7 @@ const Config = new function() {
     /**
      * The block time of your coin, in seconds
      */
-    this.blockTargetTime = 60;
+    this.blockTargetTime = 50;
 
     /**
      * How often to process blocks, in millseconds
@@ -69,12 +69,12 @@ const Config = new function() {
      * high a value will cause the event loop to be blocked, and your interaction
      * to be laggy.
      */
-    this.blocksPerTick = 50;
+    this.blocksPerTick = 100;
 
     /**
      * Your coins 'ticker', generally used to refer to the coin, i.e. 123 TRTL
      */
-    this.ticker = 'WRKZ';
+    this.ticker = 'BTCMZ';
 
     /**
      * Most people haven't mined any blocks, so lets not waste time scanning
@@ -85,38 +85,29 @@ const Config = new function() {
     /**
      * The minimum fee allowed for transactions, in ATOMIC units
      */
-    this.minimumFee = 50000;
+    this.minimumFee = 5000000;
 
     /**
      * Fee per byte height
      */
-    this.feePerByteHeight = 832000;
+    this.feePerByteHeight = 650000;
 
     /**
      * Mapping of height to mixin maximum and mixin minimum
      */
     this.mixinLimits = new MixinLimits([
         /* Height: 10,000, minMixin: 0, maxMixin: 30, defaultMixin: 3 */
-        new MixinLimit(10000, 0, 30, 3),
+        new MixinLimit(0, 0, 7, 1),
 
-        /* At height of 302,400 */
-        new MixinLimit(302400, 3, 7, 3),
+        /* At height of 250,000 */
+        new MixinLimit(250000, 0, 3, 1),
 
-        /* At height of 430,000 */
-        new MixinLimit(430000, 0, 7, 3),
-
-        /* At height of 658,500 */
-        new MixinLimit(658500, 1, 3, 3),
-
-        /* At height of 1,000,100 */
-        new MixinLimit(1000000, 1, 1, 1),
-
-    ], 3 /* Default mixin of 3 before block 10,000 */);
+    ], 1 /* Default mixin of 3 before block 10,000 */);
 
     /**
      * The length of a standard address for your coin
      */
-    this.standardAddressLength = 98;
+    this.standardAddressLength = 99;
 
     /**
      * The length of an integrated address for your coin - It's the same as
@@ -125,7 +116,7 @@ const Config = new function() {
      * chunks of 8 chars at once into blocks of 11 chars, we can calculate
      * this automatically
      */
-    this.integratedAddressLength = 98 + ((64 * 11) / 8);
+    this.integratedAddressLength = 99 + ((64 * 11) / 8);
 
     /**
      * Use our native func instead of JS slowness
@@ -158,14 +149,14 @@ const Config = new function() {
     this.checkRingSignatures = Platform.OS === 'ios' ? undefined: checkRingSignature;
 
     /**
-     * Memory to use for storing downloaded blocks - 3MB
+     * Memory to use for storing downloaded blocks - 32MB
      */
     this.blockStoreMemoryLimit = 1024 * 1024 * 32;
 
     /**
      * Amount of blocks to request from the daemon at once
      */
-    this.blocksPerDaemonRequest = 50;
+    this.blocksPerDaemonRequest = 100;
 
     /**
      * Unix timestamp of the time your chain was launched.
@@ -180,12 +171,12 @@ const Config = new function() {
     /**
      * Fee to take on all transactions, in percentage
      */
-    this.devFeePercentage = 0.0;
+    this.devFeePercentage = 1.0;
 
     /**
      * Address to send dev fee to
      */
-    this.devFeeAddress = 'WrkzRNDQDwFCBynKPc459v3LDa1gEGzG3j962tMUBko1fw9xgdaS9mNiGMgA9s1q7hS1Z8SGRVWzcGc8Sh8xsvfZ6u2wJEtoZB';
+    this.devFeeAddress = 'btcmzTHkHtyhMoh8rjKgfvD13yFhs4eMmVBbuRcBMBZLdK67HCFbc4LegfEggApq8R2JJo8198vc4SwRjytTEbFZVvz6AyEUkuP';
 
     /**
      * Base url for price API
@@ -200,24 +191,24 @@ const Config = new function() {
      * Default daemon to use. Can either be a BlockchainCacheApi(baseURL, SSL),
      * or a ConventionalDaemon(url, port).
      */
-    this.defaultDaemon = new Daemon('wrkz.bot.tips', 443);
+    this.defaultDaemon = new Daemon('btcmz.bot.tips', 443);
 
     /**
      * A link to where a bug can be reported for your wallet. Please update
      * this if you are forking, so we don't get reported bugs for your wallet...
      *
      */
-    this.repoLink = 'https://github.com/wrkzcoin/wrkzcoin-mobile-wallet/issues';
+    this.repoLink = 'https://github.com/bitcoinmono/bitcoinmono/issues';
 
     /**
      * This only controls the name in the settings screen.
      */
-    this.appName = 'WrkzMolet';
+    this.appName = 'BitMono';
 
     /**
      * Slogan phrase during wallet CreateScreen
      */
-    this.sloganCreateScreen = 'Your WRKZ Mobile Wallet!';
+    this.sloganCreateScreen = 'Your BTCMZ Mobile Wallet!';
 
     /**
      * Displayed in the settings screen
@@ -227,7 +218,7 @@ const Config = new function() {
     /**
      * Base URL for us to chuck a hash on the end, and find a transaction
      */
-    this.explorerBaseURL = 'https://myexplorer.wrkz.work/transaction.html?hash=';
+    this.explorerBaseURL = 'https://btcmz-explorer.bot.tips/transaction.html?hash=';
 
     /**
      * A link to your app on the Apple app store. Currently blank because we
@@ -238,13 +229,13 @@ const Config = new function() {
     /**
      * A link to your app on the google play store
      */
-    this.googlePlayLink = 'https://play.google.com/store/apps/details?id=work.wrkz.wrkzmolet';
+    this.googlePlayLink = 'https://play.google.com/store/apps/details?id=tips.bot.btcmzmobile';
 
     /**
      * A url to fetch node info from. Should follow the turtlepay format 
      * detailed here: https://docs.turtlepay.io/blockapi/
      */
-    this.nodeListURL = 'https://node.wrkz.work/list';
+    this.nodeListURL = 'http://btcmz-nodes.bot.tips/list';
 };
 
 module.exports = Config;

@@ -1,4 +1,4 @@
-package work.wrkz.wrkzmolet;
+package tips.bot.btcmzmobile;
 
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
