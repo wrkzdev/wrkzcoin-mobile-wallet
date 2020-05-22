@@ -35,6 +35,7 @@ jobs:
       - name: Build Android Release
         run: |
           perl -pi -e 's/YOUR_SENTRY_TOKEN/$ENV{TOKEN}/' android/sentry.properties
+          export SENTRY_PROPERTIES=android/sentry.properties
           cd android && ./gradlew assembleRelease
         env:
           TOKEN: ${{ secrets.SENTRY_TOKEN }}
