@@ -30,6 +30,7 @@ jobs:
 
       - name: Build Android Release
         run: |
+          perl -pi -e 's/YOUR_SENTRY_TOKEN/"${{ secrets.SENTRY_TOKEN }}"/' android/sentry.properties
           cd android && ./gradlew assembleRelease
 
       - uses: r0adkll/sign-android-release@v1
