@@ -186,7 +186,7 @@ export class TransactionDetailsScreen extends React.Component {
                         <Button
                             title='View on Block Explorer'
                             onPress={() => {
-                                Linking.openURL(Config.explorerBaseURL + this.state.transaction.hash + '#blockchain_transaction')
+                                Linking.openURL(Config.explorerBaseURL + this.state.transaction.hash)
                                        .catch((err) => Globals.logger.addLogMessage('Failed to open url: ' + err));
                             }}
                             color={this.props.screenProps.theme.secondaryColour}

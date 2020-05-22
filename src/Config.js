@@ -69,7 +69,7 @@ const Config = new function() {
      * high a value will cause the event loop to be blocked, and your interaction
      * to be laggy.
      */
-    this.blocksPerTick = 100;
+    this.blocksPerTick = 50;
 
     /**
      * Your coins 'ticker', generally used to refer to the coin, i.e. 123 TRTL
@@ -108,7 +108,10 @@ const Config = new function() {
         /* At height of 658,500 */
         new MixinLimit(658500, 1, 3, 3),
 
-    ], 3 /* Default mixin of 3 before block 440,000 */);
+        /* At height of 1,000,100 */
+        new MixinLimit(1000000, 1, 1, 1),
+
+    ], 3 /* Default mixin of 3 before block 10,000 */);
 
     /**
      * The length of a standard address for your coin
@@ -162,7 +165,7 @@ const Config = new function() {
     /**
      * Amount of blocks to request from the daemon at once
      */
-    this.blocksPerDaemonRequest = 100;
+    this.blocksPerDaemonRequest = 50;
 
     /**
      * Unix timestamp of the time your chain was launched.
@@ -219,7 +222,7 @@ const Config = new function() {
     /**
      * Displayed in the settings screen
      */
-    this.appVersion = 'v1.1.2';
+    this.appVersion = 'v1.2.0';
 
     /**
      * Base URL for us to chuck a hash on the end, and find a transaction
