@@ -51,7 +51,7 @@ jobs:
       - name: Prepare to Deploy
         id: before_deploy
         run: |
-          export NAME=$(ls android/app/build/outputs/apk/release/app-release*)
+          export NAME=$(ls android/app/build/outputs/apk/release/app-*)
           echo ::set-output name=file_name::${NAME:38}
 
       # Upload to S3
