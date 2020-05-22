@@ -20,18 +20,73 @@ jobs:
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ matrix.target }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: reactnative-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ matrix.target }}-yarn-
+            reactnative-yarn-
 
       - name: Install npm dependencies
         run: |
           yarn --network-concurrency 1 --network-timeout 120000
+
       - name: Build Android Release
         run: |
-          cd android && ./gradlew assembleDebug
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
+          cd android && ./gradlew assembleRelease
+
+      - uses: r0adkll/sign-android-release@v1
         with:
-          name: app-release.apk
-          path: android/app/build/outputs/apk/release/
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.MYAPP_RELEASE_STORE_FILE_KEY }}
+          alias: ${{ secrets.MYAPP_RELEASE_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.MYAPP_RELEASE_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.MYAPP_RELEASE_KEY_PASSWORD }}
+
+      - name: Prepare to Deploy
+        id: before_deploy
+        run: |
+          export NAME=$(ls android/app/build/outputs/apk/release/app-release*)
+          echo ::set-output name=file_name::${NAME:38}
+
+      # Upload to S3
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8 # Or other version
+      - name: Install awscli via pipx # Isolates dependencies
+        run: |
+          export PATH=~/.local/bin:$PATH
+          pip install --user pipx
+          pipx install awscli
+          pip install --user pipx awscli-plugin-endpoint
+      - name: S3 Upload
+        env:
+          BINARY_DISCORD_HOOK: ${{ secrets.DISCORD_HOOK }}
+          BINARY_UPLOAD: 'https://wrkzcoin.s3.fr-par.scw.cloud/'
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }} # optional: defaults to us-east-1
+          AWS_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
+          SOURCE_DIR: 'android/app/build/outputs/apk/release' # optional: defaults to entire repository
+          DEST_DIR: 'wrkzmolet'
+          COMMIT_SHA: ${{ github.sha }}
+          REPO: 'wrkzmolet'
+        shell: bash
+        run: |
+          FILENAME="./${SOURCE_DIR}/${{ steps.before_deploy.outputs.file_name }}"
+          FILESIZE=$(ls -lah "$FILENAME" | awk '{ print $5}')
+          DATE_WITH_TIME=`date "+%Y%m%d-%H%M"`
+          SHA8=${COMMIT_SHA::8}
+          OUT_FILENAME="${DATE_WITH_TIME}-${COMMIT_SHA::8}-${{ steps.before_deploy.outputs.file_name }}"
+          URL_FILE="\`\`\`${BINARY_UPLOAD}${DEST_DIR}/$OUT_FILENAME\`\`\`"
+          BUILD_CONTENT="$REPO-$SHA8 Size: $FILESIZE "$URL_FILE
+          aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+          aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+          aws configure set default.region ${AWS_REGION}
+          aws s3 cp "./${SOURCE_DIR}/${{ steps.before_deploy.outputs.file_name }}" "s3://${AWS_S3_BUCKET}/${DEST_DIR}/${OUT_FILENAME}" --no-progress --endpoint-url "${AWS_ENDPOINT}" --acl public-read
+          aws configure set aws_access_key_id null
+          aws configure set aws_secret_access_key null
+          aws configure set default.region null
+          curl -H "Content-Type: application/json" -X POST -d "{\"username\": \"BuildBot-$REPO\", \"content\": \"$BUILD_CONTENT\"}" ${BINARY_DISCORD_HOOK}
+
+
+
