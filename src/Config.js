@@ -222,12 +222,12 @@ const Config = new function() {
     /**
      * Displayed in the settings screen
      */
-    this.appVersion = 'v1.2.0';
+    this.appVersion = 'v1.2.1';
 
     /**
      * Base URL for us to chuck a hash on the end, and find a transaction
      */
-    this.explorerBaseURL = 'https://myexplorer.wrkz.work/?hash=';
+    this.explorerBaseURL = 'https://myexplorer.wrkz.work/transaction.html?hash=';
 
     /**
      * A link to your app on the Apple app store. Currently blank because we
