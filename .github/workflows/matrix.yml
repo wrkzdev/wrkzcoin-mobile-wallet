@@ -7,7 +7,13 @@ on:
 
 jobs:
   build-android:
+    name: ${{ matrix.build_name }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Add more compilers here if you need them
+        build_name: ['bundle', 'apk']
     steps: 
       - uses: actions/checkout@v2
 
@@ -32,7 +38,8 @@ jobs:
         run: |
           yarn --network-concurrency 1 --network-timeout 120000
 
-      - name: Build Android Release
+      - name: Build Android Release APK
+        if: matrix.build_name == 'apk'
         run: |
           perl -pi -e 's/YOUR_SENTRY_TOKEN/$ENV{TOKEN}/' android/sentry.properties
           export SENTRY_PROPERTIES=android/sentry.properties
@@ -40,19 +47,23 @@ jobs:
         env:
           TOKEN: ${{ secrets.SENTRY_TOKEN }}
 
-      - uses: r0adkll/sign-android-release@v1
+      - name: Build Android Release AAB
+        if: matrix.build_name == 'bundle'
+        run: |
+          perl -pi -e 's/YOUR_SENTRY_TOKEN/$ENV{TOKEN}/' android/sentry.properties
+          export SENTRY_PROPERTIES=android/sentry.properties
+          cd android && ./gradlew bundleRelease
+        env:
+          TOKEN: ${{ secrets.SENTRY_TOKEN }}
+
+      - name: Sign APK / AAB
+        uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: android/app/build/outputs/apk/release
+          releaseDirectory: android/app/build/outputs/${{ matrix.build_name }}/release
           signingKeyBase64: ${{ secrets.MYAPP_RELEASE_STORE_FILE_KEY }}
           alias: ${{ secrets.MYAPP_RELEASE_KEY_ALIAS }}
           keyStorePassword: ${{ secrets.MYAPP_RELEASE_STORE_PASSWORD }}
           keyPassword: ${{ secrets.MYAPP_RELEASE_KEY_PASSWORD }}
-
-      - name: Prepare to Deploy
-        id: before_deploy
-        run: |
-          export NAME=$(ls android/app/build/outputs/apk/release/app-release-signed*)
-          echo ::set-output name=file_name::${NAME:38}
 
       # Upload to S3
       - name: Set up Python
@@ -74,22 +85,22 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }} # optional: defaults to us-east-1
           AWS_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
-          SOURCE_DIR: 'android/app/build/outputs/apk/release' # optional: defaults to entire repository
           DEST_DIR: 'wrkzmolet'
           COMMIT_SHA: ${{ github.sha }}
           REPO: 'wrkzmolet'
         shell: bash
         run: |
-          FILESIZE=$(ls -lah "$SIGNED_RELEASE_FILE" | awk '{ print $5}')
+          FILESIZE=$(ls -lah "${SIGNED_RELEASE_FILE}" | awk '{ print $5}')
+          FILENAME="$(basename -- ${SIGNED_RELEASE_FILE})"
           DATE_WITH_TIME=`date "+%Y%m%d-%H%M"`
           SHA8=${COMMIT_SHA::8}
-          OUT_FILENAME="${DATE_WITH_TIME}-${COMMIT_SHA::8}-${{ steps.before_deploy.outputs.file_name }}"
+          OUT_FILENAME="${DATE_WITH_TIME}-${COMMIT_SHA::8}-${FILENAME}"
           URL_FILE="\`\`\`${BINARY_UPLOAD}${DEST_DIR}/$OUT_FILENAME\`\`\`"
           BUILD_CONTENT="$REPO-$SHA8 Size: $FILESIZE "$URL_FILE
           aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
           aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
           aws configure set default.region ${AWS_REGION}
-          aws s3 cp "./${SOURCE_DIR}/${{ steps.before_deploy.outputs.file_name }}" "s3://${AWS_S3_BUCKET}/${DEST_DIR}/${OUT_FILENAME}" --no-progress --endpoint-url "${AWS_ENDPOINT}" --acl public-read
+          aws s3 cp "${SIGNED_RELEASE_FILE}" "s3://${AWS_S3_BUCKET}/${DEST_DIR}/${OUT_FILENAME}" --no-progress --endpoint-url "${AWS_ENDPOINT}" --acl public-read
           aws configure set aws_access_key_id null
           aws configure set aws_secret_access_key null
           aws configure set default.region null
