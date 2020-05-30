@@ -218,7 +218,7 @@ const Config = new function() {
     /**
      * Base URL for us to chuck a hash on the end, and find a transaction
      */
-    this.explorerBaseURL = 'https://btcmz-explorer.bot.tips/transaction.html?hash=';
+    this.explorerBaseURL = 'https://explorer.bitcoinmono.io/transaction.html?hash=';
 
     /**
      * A link to your app on the Apple app store. Currently blank because we
