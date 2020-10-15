@@ -1,4 +1,5 @@
-name: react-native-android-build-apk
+name: Build APK and AAB
+
 on:
   push:
   pull_request:
@@ -12,45 +13,46 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build_name: ['bundle', 'apk']
-    steps: 
+        node: ['14']
+    steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v1.4.2
-        with:
-          node-version: '12.x'
+      - uses: bahmutov/npm-install@v1
+      - run: yarn --network-concurrency 1 --network-timeout 120000
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Setup Cache
-        uses: actions/cache@v1.2.0
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: reactnative-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            reactnative-yarn-
-
-      - name: Install npm dependencies
-        run: |
-          yarn --network-concurrency 1 --network-timeout 120000
-
-      - name: Build Android Debug APK
-        if: matrix.build_name == 'apk'
+      - name: Build Android Release APK
         run: |
           perl -pi -e 's/YOUR_SENTRY_TOKEN/$ENV{TOKEN}/' android/sentry.properties
           export SENTRY_PROPERTIES=android/sentry.properties
-          cd android && ./gradlew assembleDebug
+          cd android && ./gradlew assembleRelease
         env:
           TOKEN: ${{ secrets.SENTRY_TOKEN }}
 
-      - name: Build Android Debug AAB
-        if: matrix.build_name == 'bundle'
+      - name: Build Android Release AAB
         run: |
-          perl -pi -e 's/YOUR_SENTRY_TOKEN/$ENV{TOKEN}/' android/sentry.properties
           export SENTRY_PROPERTIES=android/sentry.properties
-          cd android && ./gradlew bundleDebug
+          cd android && ./gradlew bundleRelease
         env:
           TOKEN: ${{ secrets.SENTRY_TOKEN }}
+
+      - name: Upload AAB Release Asset
+        if: github.event_name == 'release' && github.repository == 'turtlecoin/turtlecoin-mobile-wallet'
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./android/app/build/outputs/bundle/release/app.aab
+          asset_name: tonchan.aab
+          asset_content_type: application/octet-stream
+
+      - name: Upload APK Release Asset
+        if: github.event_name == 'release' && github.repository == 'turtlecoin/turtlecoin-mobile-wallet'
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./android/app/build/outputs/apk/release/app-release.apk
+          asset_name: tonchan.apk
+          asset_content_type: application/octet-stream
