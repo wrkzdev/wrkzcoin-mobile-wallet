@@ -28,6 +28,15 @@ jobs:
         env:
           TOKEN: ${{ secrets.SENTRY_TOKEN }}
 
+      - name: Sign APK
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: ./android/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.MYAPP_RELEASE_STORE_FILE_KEY }}
+          alias: ${{ secrets.MYAPP_RELEASE_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.MYAPP_RELEASE_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.MYAPP_RELEASE_KEY_PASSWORD }}
+
       - name: Build Android Release AAB
         run: |
           export SENTRY_PROPERTIES=android/sentry.properties
@@ -35,16 +44,14 @@ jobs:
         env:
           TOKEN: ${{ secrets.SENTRY_TOKEN }}
 
-      - name: Upload AAB Release Asset
-        if: github.event_name == 'release' && github.repository == 'turtlecoin/turtlecoin-mobile-wallet'
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Sign AAB
+        uses: r0adkll/sign-android-release@v1
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./android/app/build/outputs/bundle/release/app.aab
-          asset_name: tonchan.aab
-          asset_content_type: application/octet-stream
+          releaseDirectory: ./android/app/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.MYAPP_RELEASE_STORE_FILE_KEY }}
+          alias: ${{ secrets.MYAPP_RELEASE_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.MYAPP_RELEASE_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.MYAPP_RELEASE_KEY_PASSWORD }}
 
       - name: Upload APK Release Asset
         if: github.event_name == 'release' && github.repository == 'turtlecoin/turtlecoin-mobile-wallet'
@@ -55,4 +62,15 @@ jobs:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./android/app/build/outputs/apk/release/app-release.apk
           asset_name: tonchan.apk
+          asset_content_type: application/octet-stream
+
+      - name: Upload AAB Release Asset
+        if: github.event_name == 'release' && github.repository == 'turtlecoin/turtlecoin-mobile-wallet'
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./android/app/build/outputs/bundle/release/app.aab
+          asset_name: tonchan.aab
           asset_content_type: application/octet-stream
