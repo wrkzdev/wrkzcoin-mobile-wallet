@@ -18,7 +18,7 @@ import { Globals } from './Globals';
 
 import { sendNotification } from './MainScreen';
 
-import { processBlockOutputs, makePostRequest } from './NativeCode';
+import { processBlockOutputs } from './NativeCode';
 
 import {
     saveToDatabase, haveWallet, loadWallet, openDB, loadPreferencesFromDatabase
