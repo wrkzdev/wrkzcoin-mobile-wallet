@@ -20,6 +20,9 @@ jobs:
       - uses: bahmutov/npm-install@v1
       - run: yarn --network-concurrency 1 --network-timeout 120000
 
+      - name: Increase File Watch Limit
+        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
       - name: Build Android Release APK
         run: |
           perl -pi -e 's/YOUR_SENTRY_TOKEN/$ENV{TOKEN}/' android/sentry.properties
