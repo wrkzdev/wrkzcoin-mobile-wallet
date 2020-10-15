@@ -49,7 +49,7 @@ async function tryLoadWallet(navigation) {
             return;
         }
 
-        const [wallet, walletError] = WalletBackend.loadWalletFromJSON(
+        const [wallet, walletError] = await WalletBackend.loadWalletFromJSON(
             Globals.getDaemon(), walletData, Config
         );
 

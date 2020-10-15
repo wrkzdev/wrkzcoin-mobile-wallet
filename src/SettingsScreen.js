@@ -344,15 +344,20 @@ export class ExportKeysScreen extends React.Component {
     constructor(props) {
         super(props);
 
-        let [mnemonicSeed, error] = Globals.wallet.getMnemonicSeed();
-
         const [privateSpendKey, privateViewKey] = Globals.wallet.getPrimaryAddressPrivateKeys();
 
         this.state = {
             privateSpendKey,
             privateViewKey,
-            mnemonicSeed,
         }
+    }
+
+    async componentDidMount() {
+        const [mnemonicSeed, error] = await Globals.wallet.getMnemonicSeed();
+
+        this.setState({
+            mnemonicSeed,
+        });
     }
 
     render() {
@@ -635,7 +640,7 @@ export class SwapNodeScreen extends React.Component {
                                                 backgroundColor: this.props.screenProps.theme.iconColour,
                                                 borderRadius: 45
                                             }}>
-                                                <Text style={[Styles.centeredText, { 
+                                                <Text style={[Styles.centeredText, {
                                                     fontSize: 15,
                                                     color: item.online ? '#33ff33' : '#ff0000',
                                                 }]}>
@@ -994,7 +999,7 @@ export class SettingsScreen extends React.Component {
                                     if (Globals.preferences.authConfirmation) {
                                         Authenticate(
                                             this.props.navigation,
-                                            'to disable PIN/Fingerprint confirmation', 
+                                            'to disable PIN/Fingerprint confirmation',
                                             () => {
                                                 Globals.preferences.authConfirmation = !Globals.preferences.authConfirmation;
 
@@ -1129,7 +1134,7 @@ export class SettingsScreen extends React.Component {
                                     iconName: 'github',
                                     IconType: AntDesign,
                                 },
-                                onClick: () => { 
+                                onClick: () => {
                                     Linking.openURL(Config.repoLink)
                                            .catch((err) => Globals.logger.addLogMessage('Failed to open url: ' + err))
                                 },

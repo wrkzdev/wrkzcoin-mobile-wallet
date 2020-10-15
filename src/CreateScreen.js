@@ -82,11 +82,23 @@ export class CreateWalletScreen extends React.Component {
     constructor(props) {
         super(props);
 
-        Globals.wallet = WalletBackend.createWallet(Globals.getDaemon(), Config);
+        this.state = {
+            seed: '',
+        }
+    };
+
+    async componentDidMount() {
+        Globals.wallet = await WalletBackend.createWallet(Globals.getDaemon(), Config);
+
+        const [ seed ] = await Globals.wallet.getMnemonicSeed();
+
+        this.setState({
+            seed,
+        });
 
         /* Save wallet in DB */
         saveToDatabase(Globals.wallet);
-    };
+    }
 
     render() {
         return(
@@ -113,15 +125,15 @@ export class CreateWalletScreen extends React.Component {
                 </View>
 
                 <View style={{ alignItems: 'center', flex: 1, justifyContent: 'flex-start' }}>
-                    <SeedComponent
-                        seed={Globals.wallet.getMnemonicSeed()[0]}
+                    {this.state.seed !== '' && <SeedComponent
+                        seed={this.state.seed}
                         borderColour={'red'}
                         {...this.props}
-                    />
+                    />}
 
                     <BottomButton
                         title="Continue"
-                        onPress={() => this.props.navigation.navigate('Home')} 
+                        onPress={() => this.props.navigation.navigate('Home')}
                         {...this.props}
                     />
                 </View>

@@ -141,7 +141,7 @@ async function fromHeadlessJSInit() {
         return false;
     }
 
-    const [wallet, walletError] = WalletBackend.loadWalletFromJSON(
+    const [wallet, walletError] = await WalletBackend.loadWalletFromJSON(
         Globals.getDaemon(), walletData, Config
     );
 

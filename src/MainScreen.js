@@ -143,12 +143,10 @@ export class MainScreen extends React.Component {
         this.handleNetInfoChange = this.handleNetInfoChange.bind(this);
         this.unsubscribe = () => {};
 
-        const [unlockedBalance, lockedBalance] = Globals.wallet.getBalance();
-
         this.state = {
             addressOnly: false,
-            unlockedBalance,
-            lockedBalance,
+            unlockedBalance: 0,
+            lockedBalance: 0,
         }
 
         this.updateBalance();
@@ -168,6 +166,15 @@ export class MainScreen extends React.Component {
         });
     }
 
+    async componentDidMount() {
+        const [unlockedBalance, lockedBalance] = await Globals.wallet.getBalance();
+
+        this.setState({
+            unlockedBalance,
+            lockedBalance,
+        });
+    }
+
     async updateBalance() {
         const tmpPrice = await getCoinPriceFromAPI();
 
@@ -175,7 +182,7 @@ export class MainScreen extends React.Component {
             Globals.coinPrice = tmpPrice;
         }
 
-        const [unlockedBalance, lockedBalance] = Globals.wallet.getBalance();
+        const [unlockedBalance, lockedBalance] = await Globals.wallet.getBalance();
 
         const coinValue = await coinsToFiat(
             unlockedBalance + lockedBalance, Globals.preferences.currency
@@ -281,8 +288,8 @@ export class MainScreen extends React.Component {
                     justifyContent: 'space-around',
                     height: Dimensions.get('window').height - 73,
                 }}>
-                    <View style={{ 
-                        height: '20%', 
+                    <View style={{
+                        height: '20%',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         margin: 10,
