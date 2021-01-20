@@ -175,7 +175,7 @@ export class TransactionDetailsScreen extends React.Component {
                             {...this.props}
                         />
 
-                        {this.state.transaction.paymentID !== '' && <ItemDescription
+                        {this.state.transaction.paymentID && this.state.transaction.paymentID !== '' && <ItemDescription
                             title='Payment ID'
                             item={this.state.transaction.paymentID}
                             {...this.props}
