@@ -67,7 +67,7 @@ public class MainApplication extends Application implements ReactApplication {
     upgradeSecurityProvider();
 
     /* tonchan-vx.x.x */
-    setUserAgent("tonchan-v1.2.0");
+    setUserAgent("tonchan-v1.2.1");
 
     SoLoader.init(this, /* native exopackage */ false);
   }
