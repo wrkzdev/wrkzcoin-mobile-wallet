@@ -25,13 +25,18 @@ You need to bump the version number in:
 * `package.json` - `version` - Not strictly required
 * Update user agent in `android/app/src/main/java/com/tonchan/MainApplication.java` and `android/app/src/main/java/com/tonchan/TurtleCoinModule.java`
 
-Then
-`cd android`
-`./gradlew bundleRelease`
-Optionally
-`./gradlew installRelease`
+Then either run `yarn deploy-android`, or:
 
-or `yarn deploy-android`
+`cd android`
+
+#### Create an AAB
+`./gradlew bundleRelease`
+
+#### Create an APK
+`./gradlew assembleRelease`
+
+#### Deploy to device
+`./gradlew installRelease`
 
 ### Integrating QR Codes or URIs
 
