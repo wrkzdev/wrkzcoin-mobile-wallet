@@ -209,7 +209,7 @@ const Config = new function() {
     /**
      * Displayed in the settings screen
      */
-    this.appVersion = 'v1.2.2';
+    this.appVersion = 'v1.2.3';
 
     /**
      * Base URL for us to chuck a hash on the end, and find a transaction
