@@ -155,6 +155,10 @@ export async function processBlockOutputs(
     let jsInputs = inputs.map((data) => {
         let tx = block.transactions.find((t) => t.hash === data.input.parentTransactionHash);
 
+        if (!tx) {
+            tx = block.coinbaseTransaction;
+        }
+
         const spendHeight = 0;
 
         const globalIndex = data.input.globalOutputIndex === -1
