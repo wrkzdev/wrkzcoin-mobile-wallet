@@ -42,7 +42,7 @@
     "react-native-qrcode-scanner": "^1.5.4",
     "react-native-qrcode-svg": "^5.1.2",
     "react-native-randombytes": "^3.5.3",
-    "react-native-screens": "^3.2.0",
+    "react-native-screens": "^1.0.0",
     "react-native-sqlite-storage": "^3.3.11",
     "react-native-svg": "^9.5.3",
     "react-native-tcp": "^3.3.1",
