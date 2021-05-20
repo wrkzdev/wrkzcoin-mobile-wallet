@@ -46,8 +46,8 @@ import {
     QrScannerScreen, SendTransactionScreen,
 } from './TransferScreen';
 
-import { 
-    ImportWalletScreen, ImportKeysOrSeedScreen, ImportSeedScreen, 
+import {
+    ImportWalletScreen, ImportKeysOrSeedScreen, ImportSeedScreen,
     ImportKeysScreen,
 } from './ImportScreen';
 
@@ -192,7 +192,7 @@ const HomeNavigator = createBottomTabNavigator(
         Transactions: TransactionNavigator,
         Transfer: TransferNavigator,
         Recipients: RecipientNavigator,
-        Settings: SettingsNavigator, 
+        Settings: SettingsNavigator,
     },
     {
         initialRouteName: 'Main',
@@ -308,7 +308,6 @@ const AppContainer = createAppContainer(createSwitchNavigator(
     }
 ));
 
-/* TODO: Need to load preferences to set theme */
 export default class App extends React.Component {
     constructor(props) {
         super(props);

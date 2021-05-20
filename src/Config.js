@@ -85,7 +85,7 @@ const Config = new function() {
     /**
      * The minimum fee allowed for transactions, in ATOMIC units
      */
-    this.minimumFee = 50000;
+    this.minimumFee = 10000;
 
     /**
      * Fee per byte height

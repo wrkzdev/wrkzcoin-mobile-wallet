@@ -168,14 +168,14 @@ export class TransactionDetailsScreen extends React.Component {
                             item={this.state.transaction.blockHeight.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                             {...this.props}
                         />}
-                        
+
                         <ItemDescription
                             title='Hash'
                             item={this.state.transaction.hash}
                             {...this.props}
                         />
 
-                        {this.state.transaction.paymentID !== '' && <ItemDescription
+                        {this.state.transaction.paymentID && this.state.transaction.paymentID !== '' && <ItemDescription
                             title='Payment ID'
                             item={this.state.transaction.paymentID}
                             {...this.props}
@@ -199,7 +199,7 @@ export class TransactionDetailsScreen extends React.Component {
 }
 
 /**
- * List of transactions sent + received 
+ * List of transactions sent + received
  */
 export class TransactionsScreen extends React.Component {
     static navigationOptions = {
@@ -212,15 +212,11 @@ export class TransactionsScreen extends React.Component {
 
         const [walletHeight, localHeight, networkHeight] = Globals.wallet.getSyncStatus();
 
-        /* Don't display fusions, and display newest first */
-        const transactions = Globals.wallet.getTransactions(0, Constants.numTransactionsPerPage, false);
-
         this.state = {
-            numTransactions: Globals.wallet.getNumTransactions(),
-            transactions,
             walletHeight,
             networkHeight,
             pageNum: 0,
+            numTransactions: 0
         };
 
         /* Only update transactions list when transaction is sent/received.
@@ -240,22 +236,35 @@ export class TransactionsScreen extends React.Component {
         this.changePage = this.changePage.bind(this);
     }
 
-    updateTransactions() {
+    async componentDidMount() {
+        /* Don't display fusions, and display newest first */
+        const transactions = await Globals.wallet.getTransactions(0, Constants.numTransactionsPerPage, false);
+        const numTransactions = await Globals.wallet.getNumTransactions();
+
+        this.setState({
+            numTransactions,
+            transactions,
+        });
+
+        this.interval = setInterval(() => this.tick(), 10000);
+    }
+
+    async updateTransactions() {
         /* Don't display fusions */
-        const transactions = Globals.wallet.getTransactions(
+        const transactions = await Globals.wallet.getTransactions(
             this.state.pageNum * Constants.numTransactionsPerPage,
             Constants.numTransactionsPerPage,
             false
         );
 
         this.setState({
-            numTransactions: Globals.wallet.getNumTransactions(),
+            numTransactions: (await Globals.wallet.getNumTransactions()),
             transactions,
         });
     }
 
-    tick() {
-        const numTransactions = Globals.wallet.getNumTransactions();
+    async tick() {
+        const numTransactions = await Globals.wallet.getNumTransactions();
 
         /* If we have no transactions, update the heights, to display the
            not sent / not synced msg */
@@ -267,10 +276,6 @@ export class TransactionsScreen extends React.Component {
                 networkHeight,
             });
         }
-    }
-
-    componentDidMount() {
-        this.interval = setInterval(() => this.tick(), 10000);
     }
 
     componentWillUnmount() {
@@ -286,13 +291,13 @@ export class TransactionsScreen extends React.Component {
             pageNum,
         }, this.updateTransactions);
     }
-    
+
     render() {
-        const syncedMsg = this.state.walletHeight + 10 >= this.state.networkHeight ? 
-            '' 
+        const syncedMsg = this.state.walletHeight + 10 >= this.state.networkHeight ?
+            ''
           : "\nYour wallet isn't fully synced. If you're expecting some transactions, please wait.";
 
-        const noTransactions = 
+        const noTransactions =
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: this.props.screenProps.theme.backgroundColour }}>
                 <Text style={{ fontSize: 20, color: this.props.screenProps.theme.primaryColour, justifyContent: 'center', textAlign: 'center' }}>
                     Looks like you haven't sent{"\n"}or received any transactions yet!{"\n"}
@@ -302,7 +307,7 @@ export class TransactionsScreen extends React.Component {
 
         return(
             this.state.numTransactions === 0 ?
-                noTransactions 
+                noTransactions
              : <TransactionList
                 {...this.props}
                 pageNum={this.state.pageNum}

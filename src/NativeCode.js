@@ -36,7 +36,7 @@ export async function derivePublicKey(
 export async function generateKeyDerivation(
     transactionPublicKey,
     privateViewKey) {
-    
+
     return NativeModules.TurtleCoin.generateKeyDerivation(
         transactionPublicKey, privateViewKey,
     );
@@ -64,27 +64,30 @@ export async function checkRingSignature(
 }
 
 export async function makePostRequest(endpoint, body) {
-    if (endpoint !== '/getwalletsyncdata') {
+    if (endpoint !== '/sync') {
         return this.makeRequest(endpoint, 'POST', body);
     }
 
     const {
-        blockCount, blockHashCheckpoints, startHeight, startTimestamp,
-        skipCoinbaseTransactions
+        count,
+        checkpoints,
+        skipCoinbaseTransactions,
+        height,
+        timestamp,
     } = body;
 
     const protocol = this.sslDetermined ? (this.ssl ? 'https' : 'http') : 'https';
-    const url = `${protocol}://${this.host}:${this.port}/getwalletsyncdata`;
+    const url = `${protocol}://${this.host}:${this.port}/sync`;
 
     /* This is being executed within the Daemon module, so we can get access
        to it's class with `this` */
     let data = await NativeModules.TurtleCoin.getWalletSyncData(
-        blockHashCheckpoints,
-        startHeight,
-        startTimestamp,
-        blockCount,
+        count,
+        checkpoints,
         skipCoinbaseTransactions,
-        url,
+        height,
+        timestamp,
+        url
     );
 
     if (data.error) {
@@ -94,12 +97,12 @@ export async function makePostRequest(endpoint, body) {
 
         /* Ssl failed, lets try http */
         data = await NativeModules.TurtleCoin.getWalletSyncData(
-            blockHashCheckpoints,
-            startHeight,
-            startTimestamp,
-            blockCount,
-            this.config.scanCoinbaseTransactions,
-            `http://${this.host}:${this.port}/getwalletsyncdata`,
+            count,
+            checkpoints,
+            skipCoinbaseTransactions,
+            height,
+            timestamp,
+            `http://${this.host}:${this.port}/sync`,
         );
 
         if (data.error) {
@@ -108,6 +111,11 @@ export async function makePostRequest(endpoint, body) {
 
         try {
             data = JSON.parse(data);
+
+            this.ssl = false;
+            this.sslDetermined = true;
+
+            return [data, 200];
         } catch (err) {
             throw new Error(err);
         }
@@ -119,7 +127,7 @@ export async function makePostRequest(endpoint, body) {
         throw new Error(err);
     }
 
-    return data;
+    return [data, 200];
 }
 
 export async function processBlockOutputs(
@@ -140,16 +148,20 @@ export async function processBlockOutputs(
     })
 
     let inputs = await NativeModules.TurtleCoin.processBlockOutputs(
-        block, privateViewKey, javaSpendKeys, isViewWallet, 
+        block, privateViewKey, javaSpendKeys, isViewWallet,
         processCoinbaseTransactions,
     );
 
     let jsInputs = inputs.map((data) => {
         let tx = block.transactions.find((t) => t.hash === data.input.parentTransactionHash);
 
+        if (!tx) {
+            tx = block.coinbaseTransaction;
+        }
+
         const spendHeight = 0;
 
-        const globalIndex = data.input.globalOutputIndex === -1 
+        const globalIndex = data.input.globalOutputIndex === -1
                           ? undefined : data.input.globalOutputIndex;
 
         const input = new TransactionInput(
