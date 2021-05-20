@@ -18,7 +18,7 @@ import { Globals } from './Globals';
 
 import { sendNotification } from './MainScreen';
 
-import { processBlockOutputs, makePostRequest } from './NativeCode';
+import { processBlockOutputs } from './NativeCode';
 
 import {
     saveToDatabase, haveWallet, loadWallet, openDB, loadPreferencesFromDatabase
@@ -141,7 +141,7 @@ async function fromHeadlessJSInit() {
         return false;
     }
 
-    const [wallet, walletError] = WalletBackend.loadWalletFromJSON(
+    const [wallet, walletError] = await WalletBackend.loadWalletFromJSON(
         Globals.getDaemon(), walletData, Config
     );
 

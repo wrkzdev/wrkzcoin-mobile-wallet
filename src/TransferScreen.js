@@ -22,7 +22,7 @@ import {
 } from 'turtlecoin-wallet-backend';
 
 import {
-    View, Text, TextInput, TouchableWithoutFeedback, FlatList, Platform,
+    View, Text, TouchableWithoutFeedback, FlatList, Platform,
     ScrollView, Clipboard,
 } from 'react-native';
 
@@ -154,21 +154,31 @@ export class TransferScreen extends React.Component {
     constructor(props) {
         super(props);
 
-        const [unlockedBalance, lockedBalance] = Globals.wallet.getBalance();
-
         this.state = {
-            unlockedBalance,
-            lockedBalance,
             errMsg: '',
             continueEnabled: false,
-            unlockedBalanceHuman: fromAtomic(unlockedBalance),
             sendAll: false,
             amountFontSize: 30,
+            unlockedBalance: 0,
+            lockedBalance: 0,
+            unlockedBalanceHuman: 0,
         }
     }
-    
-    tick() {
-        const [unlockedBalance, lockedBalance] = Globals.wallet.getBalance();
+
+    async componentDidMount() {
+        const [unlockedBalance, lockedBalance] = await Globals.wallet.getBalance();
+
+        this.setState({
+            unlockedBalance,
+            lockedBalance,
+            unlockedBalanceHuman: fromAtomic(unlockedBalance),
+        });
+
+        this.interval = setInterval(() => this.tick(), 10000);
+    }
+
+    async tick() {
+        const [unlockedBalance, lockedBalance] = await Globals.wallet.getBalance();
 
         this.setState({
             unlockedBalance,
@@ -183,6 +193,7 @@ export class TransferScreen extends React.Component {
                 this.setState({
                     continueEnabled: true,
                     amountAtomic: this.state.unlockedBalance,
+                    errMsg: '',
                 });
             } else {
                 this.setState({
@@ -198,10 +209,6 @@ export class TransferScreen extends React.Component {
                 errMsg: error,
             });
         }
-    }
-
-    componentDidMount() {
-        this.interval = setInterval(() => this.tick(), 10000);
     }
 
     componentWillUnmount() {
@@ -288,7 +295,7 @@ export class TransferScreen extends React.Component {
                                     amount: this.state.amountAtomic,
                                 }
                             );
-                        }} 
+                        }}
                         disabled={!this.state.continueEnabled}
                         {...this.props}
                     />
@@ -343,7 +350,7 @@ class AddressBook extends React.Component {
                                         backgroundColor: this.props.screenProps.theme.iconColour,
                                         borderRadius: 45
                                     }}>
-                                        <Text style={[Styles.centeredText, { 
+                                        <Text style={[Styles.centeredText, {
                                             fontSize: 30,
                                             color: this.props.screenProps.theme.primaryColour,
                                         }]}>
@@ -463,7 +470,7 @@ export class NewPayeeScreen extends React.Component {
             });
         }
 
-        const addressError = validateAddresses([address], true, Config);
+        const addressError = await validateAddresses([address], true, Config);
 
         if (addressError.errorCode !== WalletErrorCode.SUCCESS) {
             errorMessage = addressError.toString();
@@ -676,7 +683,7 @@ export class NewPayeeScreen extends React.Component {
 
                             /* Add payee to global payee store */
                             Globals.addPayee(payee);
-                            
+
                             const finishFunction = this.props.navigation.getParam('finishFunction', undefined);
 
                             if (finishFunction) {
@@ -756,7 +763,12 @@ export class ConfirmScreen extends React.Component {
     constructor(props) {
         super(props);
 
-        const [unlockedBalance, lockedBalance] = Globals.wallet.getBalance();
+        this.state = {
+        };
+    }
+
+    async componentDidMount() {
+        const [unlockedBalance, lockedBalance] = await Globals.wallet.getBalance();
 
         const { payee, amount, sendAll } = this.props.navigation.state.params;
 
@@ -766,7 +778,7 @@ export class ConfirmScreen extends React.Component {
 
         const [feeAddress, nodeFee] = Globals.wallet.getNodeFee();
 
-        this.state = {
+        this.setState({
             memo: '',
             modifyMemo: false,
             preparedTransaction: false,
@@ -777,7 +789,7 @@ export class ConfirmScreen extends React.Component {
             unlockedBalance,
             devFee,
             nodeFee,
-        }
+        });
 
         this.prepareTransaction();
     }
@@ -992,7 +1004,7 @@ export class ConfirmScreen extends React.Component {
                         marginHorizontal: this.state.modifyMemo ? 20 : 30,
                         marginTop: 20,
                     }}>
-                        {this.state.modifyMemo ? 
+                        {this.state.modifyMemo ?
                             <ModifyMemo
                                 memo={this.state.memo}
                                 onChange={(text) => {
@@ -1002,7 +1014,7 @@ export class ConfirmScreen extends React.Component {
                                 }}
                                 {...this.props}
                             />
-                            : 
+                            :
                             <Text style={{ color: this.props.screenProps.theme.primaryColour, fontSize: 16 }}>
                                 {this.state.memo === '' ? 'None' : this.state.memo}
                             </Text>
@@ -1221,7 +1233,7 @@ export class ChoosePayeeScreen extends React.Component {
                 backgroundColor: this.props.screenProps.theme.backgroundColour,
                 flex: 1,
             }}>
-                <View style={{ 
+                <View style={{
                     alignItems: 'flex-start',
                     justifyContent: 'flex-start',
                     marginLeft: 30,
@@ -1257,7 +1269,7 @@ export class ChoosePayeeScreen extends React.Component {
                     />
                 </View>
 
-                <View style={{ 
+                <View style={{
                     alignItems: 'flex-start',
                     justifyContent: 'flex-start',
                     marginLeft: 30,
@@ -1474,7 +1486,7 @@ export class SendTransactionScreen extends React.Component {
                     onPress={() => {
                         this.props.navigation.dispatch(navigateWithDisabledBack('ChoosePayee'));
                         this.props.navigation.navigate('Main');
-                    }} 
+                    }}
                     disabled={!this.state.homeEnabled}
                     {...this.props}
                 />

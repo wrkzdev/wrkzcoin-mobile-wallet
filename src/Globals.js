@@ -93,7 +93,7 @@ class globals {
     getDaemon() {
         const [ host, port ] = this.preferences.node.split(':');
 
-        const daemon = new Daemon(host, Number(port));
+        const daemon = new Daemon(host, Number(port), undefined, false);
 
         if (Platform.OS === 'android') {
             /* Override with our native makePostRequest implementation which can
@@ -146,7 +146,7 @@ export async function initGlobals() {
     if (transactionDetails !== undefined) {
         Globals.transactionDetails = transactionDetails;
     }
-    
+
     const netInfo = await NetInfo.fetch();
 
     /* Start syncing */

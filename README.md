@@ -25,13 +25,18 @@ You need to bump the version number in:
 * `package.json` - `version` - Not strictly required
 * Update user agent in `android/app/src/main/java/com/tonchan/MainApplication.java` and `android/app/src/main/java/com/tonchan/TurtleCoinModule.java`
 
-Then
-`cd android`
-`./gradlew bundleRelease`
-Optionally
-`./gradlew installRelease`
+Then either run `yarn deploy-android`, or:
 
-or `yarn deploy-android`
+`cd android`
+
+#### Create an AAB
+`./gradlew bundleRelease`
+
+#### Create an APK
+`./gradlew assembleRelease`
+
+#### Deploy to device
+`./gradlew installRelease`
 
 ### Integrating QR Codes or URIs
 
@@ -58,3 +63,7 @@ turtlecoin://TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvP
 This would send `100 TRTL` (10000 in atomic units) to the address `TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW`, using the name `Starbucks Coffee` (Note the URI encoding), and using a payment ID of `f13adc8ac78eb22ffcee3f82e0e9ffb251dc7dc0600ef599087a89b623ca1402`
 
 You can also just display the URI as a hyperlink. If a user clicks the link, it will open the app, and jump to the confirm screen, just as a QR code would function. (Provided all the fields are given)
+
+### Developing
+
+* Trigger a background sync to fire: `adb shell cmd jobscheduler run -f com.tonchan 999`

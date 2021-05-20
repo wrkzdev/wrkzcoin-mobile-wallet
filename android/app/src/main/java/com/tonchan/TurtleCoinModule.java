@@ -218,11 +218,11 @@ public class TurtleCoinModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getWalletSyncData(
+        final double blockCount,
         ReadableArray blockHashCheckpointsJS,
+        final boolean skipCoinbaseTransactions,
         final double startHeight,
         final double startTimestamp,
-        final double blockCount,
-        final boolean skipCoinbaseTransactions,
         final String url,
         final Promise promise) {
 
@@ -235,11 +235,11 @@ public class TurtleCoinModule extends ReactContextBaseJavaModule {
         new Thread(new Runnable() {
             public void run() {
                 getWalletSyncDataImpl(
+                    (long)blockCount,
                     blockHashCheckpoints,
+                    skipCoinbaseTransactions,
                     (long)startHeight,
                     (long)startTimestamp,
-                    (long)blockCount,
-                    skipCoinbaseTransactions,
                     url,
                     promise
                 );
@@ -258,7 +258,7 @@ public class TurtleCoinModule extends ReactContextBaseJavaModule {
 
         promise.resolve("");
     }
-    
+
     @ReactMethod
     public void isDozeDisabled(Promise promise) {
         PowerManager pm = (PowerManager)getReactApplicationContext().getSystemService(Context.POWER_SERVICE);
@@ -268,11 +268,11 @@ public class TurtleCoinModule extends ReactContextBaseJavaModule {
     private static long BLOCK_COUNT = 100;
 
     private void getWalletSyncDataImpl(
+        long blockCount,
         String[] blockHashCheckpoints,
+        boolean skipCoinbaseTransactions,
         long startHeight,
         long startTimestamp,
-        long blockCount,
-        boolean skipCoinbaseTransactions,
         String url,
         Promise promise) {
 
@@ -300,7 +300,7 @@ public class TurtleCoinModule extends ReactContextBaseJavaModule {
             connection.setRequestProperty("Accept", "application/json");
 
             /* tonchan-vx.x.x */
-            connection.setRequestProperty("User-Agent", "tonchan-v1.2.2");
+            connection.setRequestProperty("User-Agent", "tonchan-v1.2.3");
 
             /* Indicate we have a POST body */
             connection.setDoOutput(true);
@@ -316,16 +316,15 @@ public class TurtleCoinModule extends ReactContextBaseJavaModule {
                 checkpoints.put(blockHashCheckpoints[i]);
             }
 
-            json.put("blockHashCheckpoints", checkpoints);
-
-            json.put("startHeight", startHeight);
-            json.put("startTimestamp", startTimestamp);
-            json.put("blockCount", blockCount);
+            json.put("count", blockCount);
+            json.put("checkpoints", checkpoints);
             json.put("skipCoinbaseTransactions", skipCoinbaseTransactions);
+            json.put("height", startHeight);
+            json.put("timestamp", startTimestamp);
 
             String params = json.toString();
 
-            Log.d("ReactNative", "Making request to /getwalletsyncdata with params " + params);
+            Log.d("ReactNative", "Making request to /sync with params " + params);
 
             wr.writeBytes(params);
             wr.flush();
@@ -371,11 +370,11 @@ public class TurtleCoinModule extends ReactContextBaseJavaModule {
                     /* Response is too large, and will likely cause us to go OOM
                        and crash. Lets half the block count and try again. */
                     getWalletSyncDataImpl(
+                        BLOCK_COUNT,
                         blockHashCheckpoints,
+                        skipCoinbaseTransactions,
                         startHeight,
                         startTimestamp,
-                        BLOCK_COUNT,
-                        skipCoinbaseTransactions,
                         url,
                         promise
                     );
@@ -401,7 +400,7 @@ public class TurtleCoinModule extends ReactContextBaseJavaModule {
 
             String responseData = response.toString();
 
-            Log.d("ReactNative", "Got response from /getwalletsyncdata with body " + responseData);
+            Log.d("ReactNative", "Got response from /sync with body " + responseData);
 
             promise.resolve(responseData);
         }
@@ -428,7 +427,7 @@ public class TurtleCoinModule extends ReactContextBaseJavaModule {
 
     private SpendKey[] arrayToSpendKeys(ReadableArray spendKeys) {
         SpendKey[] keys = new SpendKey[spendKeys.size()];
-        
+
         for (int i = 0; i < spendKeys.size(); i++) {
             keys[i] = new SpendKey(spendKeys.getMap(i));
         }

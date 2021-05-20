@@ -185,10 +185,9 @@ const Config = new function() {
     this.priceApiLink = 'https://api.coingecko.com/api/v3/simple/price';
 
     /**
-     * Default daemon to use. Can either be a BlockchainCacheApi(baseURL, SSL),
-     * or a ConventionalDaemon(url, port).
+     * Default daemon to use.
      */
-    this.defaultDaemon = new Daemon('blockapi.turtlepay.io', 443);
+    this.defaultDaemon = new Daemon('public.turtlenode.net', 11898, undefined, false);
 
     /**
      * A link to where a bug can be reported for your wallet. Please update
@@ -210,7 +209,7 @@ const Config = new function() {
     /**
      * Displayed in the settings screen
      */
-    this.appVersion = 'v1.1.2';
+    this.appVersion = 'v1.2.3';
 
     /**
      * Base URL for us to chuck a hash on the end, and find a transaction
@@ -229,10 +228,10 @@ const Config = new function() {
     this.googlePlayLink = 'https://play.google.com/store/apps/details?id=com.tonchan';
 
     /**
-     * A url to fetch node info from. Should follow the turtlepay format 
+     * A url to fetch node info from. Should follow the turtlepay format
      * detailed here: https://docs.turtlepay.io/blockapi/
      */
-    this.nodeListURL = 'https://blockapi.turtlepay.io/node/list';
+    this.nodeListURL = 'https://blockapi.turtlepay.io/node/list/available';
 };
 
 module.exports = Config;

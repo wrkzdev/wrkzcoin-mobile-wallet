@@ -43,7 +43,7 @@ export function navigateWithDisabledBack(route, routeParams) {
     return StackActions.reset({
         index: 0,
         actions: [
-            NavigationActions.navigate({ 
+            NavigationActions.navigate({
                 routeName: route,
                 params: routeParams,
             }),
@@ -67,7 +67,7 @@ export function prettyPrintDate(date) {
     return date.format('D MMM, YYYY HH:mm');
 }
 
-/** 
+/**
  * Gets the approximate height of the blockchain, based on the launch timestamp
  */
 export function getApproximateBlockHeight(date) {
@@ -106,8 +106,8 @@ export function getArrivalTime() {
     }
 }
 
-export function handleURI(data, navigation) {
-    const result = parseURI(data);
+export async function handleURI(data, navigation) {
+    const result = await parseURI(data);
 
     if (!result.valid) {
         Alert.alert(
@@ -125,7 +125,7 @@ export function handleURI(data, navigation) {
     }
 }
 
-export function parseURI(qrData) {
+export async function parseURI(qrData) {
     /* It's a URI, try and get the data from it */
     if (qrData.startsWith(Config.uriPrefix)) {
         /* Remove the turtlecoin:// prefix */
@@ -164,7 +164,7 @@ export function parseURI(qrData) {
             }
         }
 
-        const addressError = validateAddresses([address], true, Config);
+        const addressError = await validateAddresses([address], true, Config);
 
         /* Address isn't valid */
         if (addressError.errorCode !== WalletErrorCode.SUCCESS) {
@@ -194,12 +194,12 @@ export function parseURI(qrData) {
         }
 
         const existingPayee = Globals.payees.find((p) => p.nickname === name);
-        
+
         /* Payee exists already */
         if (existingPayee) {
             /* New payee doesn't match existing payee, get them to enter a new name */
             if (existingPayee.address !== newPayee.address ||
-                existingPayee.paymentID !== newPayee.paymentID) { 
+                existingPayee.paymentID !== newPayee.paymentID) {
                 return {
                     paymentID: paymentID || '',
                     address,
@@ -229,7 +229,7 @@ export function parseURI(qrData) {
         }
     /* It's a standard address, try and parse it (or something else) */
     } else {
-        const addressError = validateAddresses([qrData], true, Config);
+        const addressError = await validateAddresses([qrData], true, Config);
 
         if (addressError.errorCode !== WalletErrorCode.SUCCESS) {
             return {
