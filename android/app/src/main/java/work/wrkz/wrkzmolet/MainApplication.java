@@ -47,7 +47,6 @@ public class MainApplication extends Application implements ReactApplication {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       // Packages that cannot be autolinked yet can be added manually here
       packages.add(new RNBackgroundFetchPackage());
-      packages.add(new ReactNativePushNotificationPackage());
       packages.add(new TurtleCoinPackage());
       return packages;
     }
