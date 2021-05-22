@@ -205,10 +205,13 @@ android {
 dependencies {
     implementation project(':react-native-fingerprint-scanner')
     implementation project(':react-native-background-fetch')
+    implementation project(':react-native-push-notification')
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'com.google.android.gms:play-services-safetynet:+'
     implementation 'com.android.support:multidex:1.0.3'
+
     apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
     if (enableHermes) {
