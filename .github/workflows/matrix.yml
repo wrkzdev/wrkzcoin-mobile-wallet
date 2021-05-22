@@ -88,7 +88,7 @@ jobs:
 
       - name: Sign APK Debug
         uses: r0adkll/sign-android-release@v1
-        if: matrix.build_name == 'apkdebug'
+        if: matrix.build_name == 'apkdbg'
         with:
           releaseDirectory: android/app/build/outputs/${{ matrix.build_name }}/debug
           signingKeyBase64: ${{ secrets.MYAPP_RELEASE_STORE_FILE_KEY }}
