@@ -90,7 +90,7 @@ jobs:
         uses: r0adkll/sign-android-release@v1
         if: matrix.build_name == 'apkdbg'
         with:
-          releaseDirectory: android/app/build/outputs/${{ matrix.build_name }}/debug
+          releaseDirectory: android/app/build/outputs/apk/debug
           signingKeyBase64: ${{ secrets.MYAPP_RELEASE_STORE_FILE_KEY }}
           alias: ${{ secrets.MYAPP_RELEASE_KEY_ALIAS }}
           keyStorePassword: ${{ secrets.MYAPP_RELEASE_STORE_PASSWORD }}
