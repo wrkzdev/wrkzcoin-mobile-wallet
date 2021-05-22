@@ -78,8 +78,19 @@ jobs:
 
       - name: Sign APK / AAB
         uses: r0adkll/sign-android-release@v1
+        if: matrix.build_name == 'bundle' || matrix.build_name == 'apk'
         with:
           releaseDirectory: android/app/build/outputs/${{ matrix.build_name }}/release
+          signingKeyBase64: ${{ secrets.MYAPP_RELEASE_STORE_FILE_KEY }}
+          alias: ${{ secrets.MYAPP_RELEASE_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.MYAPP_RELEASE_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.MYAPP_RELEASE_KEY_PASSWORD }}
+
+      - name: Sign APK Debug
+        uses: r0adkll/sign-android-release@v1
+        if: matrix.build_name == 'apkdebug'
+        with:
+          releaseDirectory: android/app/build/outputs/${{ matrix.build_name }}/debug
           signingKeyBase64: ${{ secrets.MYAPP_RELEASE_STORE_FILE_KEY }}
           alias: ${{ secrets.MYAPP_RELEASE_KEY_ALIAS }}
           keyStorePassword: ${{ secrets.MYAPP_RELEASE_STORE_PASSWORD }}
