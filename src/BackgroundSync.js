@@ -187,7 +187,7 @@ async function fromHeadlessJSInit() {
 
         popInitialNotification: true,
 
-        requestPermissions: Platform.OS === 'android',
+        requestPermissions: true,
     });
 
     return true;
