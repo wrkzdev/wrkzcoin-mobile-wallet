@@ -86,7 +86,7 @@ async function init(navigation) {
 
         popInitialNotification: true,
 
-        requestPermissions: true,
+        requestPermissions: Platform.OS === 'android',
     });
 
     const url = await Linking.getInitialURL();
