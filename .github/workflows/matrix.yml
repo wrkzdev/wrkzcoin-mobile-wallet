@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build_name: ['bundle', 'apk']
+        build_name: ['bundle', 'apk', 'apkdbg']
     steps: 
       - uses: actions/checkout@v2
 
@@ -58,6 +58,15 @@ jobs:
         env:
           TOKEN: ${{ secrets.SENTRY_TOKEN }}
 
+      - name: Build Android Release APK Debug
+        if: matrix.build_name == 'apkdbg'
+        run: |
+          perl -pi -e 's/YOUR_SENTRY_TOKEN/$ENV{TOKEN}/' android/sentry.properties
+          export SENTRY_PROPERTIES=android/sentry.properties
+          cd android && ./gradlew assembleDebug
+        env:
+          TOKEN: ${{ secrets.SENTRY_TOKEN }}
+
       - name: Build Android Release AAB
         if: matrix.build_name == 'bundle'
         run: |
@@ -69,6 +78,7 @@ jobs:
 
       - name: Sign APK / AAB
         uses: r0adkll/sign-android-release@v1
+        if: matrix.build_name == 'bundle' || matrix.build_name == 'apk'
         with:
           releaseDirectory: android/app/build/outputs/${{ matrix.build_name }}/release
           signingKeyBase64: ${{ secrets.MYAPP_RELEASE_STORE_FILE_KEY }}

@@ -9,3 +9,4 @@ android/app/my-release-key.keystore
 android/gradle.properties
 android/local.properties
 yarn-error.log
+android/app/google-services.json
