@@ -55,7 +55,7 @@
     "readable-stream": "3.4.0",
     "rn-nodeify": "^10.0.1",
     "stream-browserify": "^2.0.2",
-    "turtlecoin-wallet-backend": "https://github.com/wrkzcoin/turtlecoin-wallet-backend-js#master",
+    "turtlecoin-wallet-backend": "https://github.com/wrkzcoin/turtlecoin-wallet-backend-js#dev",
     "url": "~0.11.0",
     "vm-browserify": "1.1.0"
   },
