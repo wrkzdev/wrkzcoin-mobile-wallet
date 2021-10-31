@@ -162,25 +162,6 @@ export class FaqScreen extends React.Component {
                         Don't worry, your balance should unlock once the transaction confirms. (Normally in {arrivalTime})
                     </Text>
 
-                    <Text style={{
-                        fontSize: 24,
-                        color: this.props.screenProps.theme.primaryColour,
-                        marginBottom: 5,
-                    }}>
-                        • What is Auto Optimization?
-                    </Text>
-
-                    <Text style={{
-                        color: this.props.screenProps.theme.slightlyMoreVisibleColour,
-                        marginBottom: 20,
-                    }}>
-                        Auto Optimization, whenever necessary, sends fusion transactions, to keep your wallet optimized.
-                        As mentioned above, your wallet is comprised of multiple 'chunks' of {Config.coinName}.{'\n\n'}
-                        Optimizing combines the chunks into fewer, larger ones. This enables you to fit more funds in one transaction.{'\n\n'}
-                        This process will result in your balance occasionally being locked - this should only last for a few minutes
-                        while the fusion transactions get added to a block, depending on how unoptimized your wallet is.
-                    </Text>
-
                 </ScrollView>
             </View>
         );
@@ -1079,39 +1060,6 @@ export class SettingsScreen extends React.Component {
                                 },
                                 checkbox: true,
                                 checked: this.state.scanCoinbase,
-                            },
-                            {
-                                title: 'Enable Auto Optimization',
-                                description: 'Helps sending large TXs (See FAQ)',
-                                icon: {
-                                    iconName: 'refresh',
-                                    IconType: SimpleLineIcons,
-                                },
-                                onClick: () => {
-                                    Globals.preferences.autoOptimize = !Globals.preferences.autoOptimize;
-
-                                    this.setState({
-                                        autoOptimize: Globals.preferences.autoOptimize,
-                                    });
-
-                                    Globals.wallet.enableAutoOptimization(Globals.preferences.autoOptimize);
-                                    toastPopUp(Globals.preferences.autoOptimize ? 'Auto Optimization enabled' : 'Auto Optimization disabled');
-                                    savePreferencesToDatabase(Globals.preferences);
-                                },
-                                checkbox: true,
-                                checked: this.state.autoOptimize,
-                            },
-                            {
-                                title: 'Manually Optimize Wallet',
-                                description: 'Helps sending large TXs (See FAQ)',
-                                icon: {
-                                    iconName: 'refresh',
-                                    IconType: SimpleLineIcons,
-                                },
-                                onClick: () => {
-                                    optimizeWallet(this.props.navigation);
-                                },
-
                             },
                             {
                                 title: `View ${Config.appName} on ${Platform.OS === 'ios' ? 'the App Store' : 'Google Play'}`,
