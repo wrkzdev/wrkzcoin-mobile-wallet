@@ -162,25 +162,6 @@ export class FaqScreen extends React.Component {
                         Don't worry, your balance should unlock once the transaction confirms. (Normally in {arrivalTime})
                     </Text>
 
-                    <Text style={{
-                        fontSize: 24,
-                        color: this.props.screenProps.theme.primaryColour,
-                        marginBottom: 5,
-                    }}>
-                        • What is Auto Optimization?
-                    </Text>
-
-                    <Text style={{
-                        color: this.props.screenProps.theme.slightlyMoreVisibleColour,
-                        marginBottom: 20,
-                    }}>
-                        Auto Optimization, whenever necessary, sends fusion transactions, to keep your wallet optimized.
-                        As mentioned above, your wallet is comprised of multiple 'chunks' of {Config.coinName}.{'\n\n'}
-                        Optimizing combines the chunks into fewer, larger ones. This enables you to fit more funds in one transaction.{'\n\n'}
-                        This process will result in your balance occasionally being locked - this should only last for a few minutes
-                        while the fusion transactions get added to a block, depending on how unoptimized your wallet is.
-                    </Text>
-
                 </ScrollView>
             </View>
         );
@@ -697,108 +678,6 @@ export class SwapNodeScreen extends React.Component {
     }
 }
 
-export class OptimizeScreen extends React.Component {
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: 'Optimize Wallet',
-    });
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            sent: 0,
-            completed: false,
-            fullyOptimized: false,
-        };
-
-        this.optimize();
-    }
-
-    async optimize() {
-        let failCount = 0;
-
-        while (true) {
-            const result = await Globals.wallet.sendFusionTransactionBasic();
-
-            console.log(result.error);
-
-            if (result.success) {
-                this.setState((prevState) => {
-                    return {
-                        sent: prevState.sent + 1,
-                    };
-                });
-
-                failCount = 0;
-            } else {
-                console.log(result.error.errorCode);
-
-                if (result.error.errorCode === WalletErrorCode.FULLY_OPTIMIZED) {
-                    this.setState({
-                        completed: true,
-                        fullyOptimized: true,
-                    });
-
-                    return;
-                }
-
-                if (failCount > 5) {
-                    this.setState({
-                        completed: true,
-                        error: result.error.toString(),
-                    });
-
-                    return;
-                }
-
-                failCount++;
-            }
-        }
-    }
-
-    render() {
-        return(
-            <View style={{
-                backgroundColor: this.props.screenProps.theme.backgroundColour,
-                flex: 1,
-            }}>
-                <View style={{
-                    marginTop: 60,
-                    marginLeft: 30,
-                    marginRight: 30,
-                }}>
-                    {!this.state.completed && <Animatable.Text
-                        style={{
-                            color: this.props.screenProps.theme.primaryColour,
-                            fontSize: 25,
-                        }}
-                        animation='pulse'
-                        iterationCount='infinite'
-                    >
-                        Optimizing wallet, please wait...
-                    </Animatable.Text>}
-
-                    {this.state.sent > 0 && !this.state.completed && <Text style={{ fontSize: 20, color: this.props.screenProps.theme.slightlyMoreVisibleColour }}>
-                        {`Sent ${this.state.sent} fusion transaction${this.state.sent >= 2 ? 's' : ''}.`}
-                    </Text>}
-
-                    {this.state.sent > 0 && this.state.completed && <Text style={{ fontSize: 20, marginTop: 10, color: this.props.screenProps.theme.slightlyMoreVisibleColour }}>
-                        {`${this.state.sent} fusion transaction${this.state.sent >= 2 ? 's were' : ' was'} sent. It may take some time for ${this.state.sent >= 2 ? 'them' : 'it'} to be included in a block. Once this is complete, your balance will unlock for spending.`}
-                    </Text>}
-
-                    {this.state.completed && this.state.fullyOptimized && <Text style={{ fontSize: 20, marginTop: 10, color: this.props.screenProps.theme.slightlyMoreVisibleColour }}>
-                        {this.state.sent > 0 ? 'Your wallet is now fully optimized!' : 'Wow, your wallet is already fully optimized! Nice!'}
-                    </Text>}
-
-                    {this.state.completed && !this.state.fullyOptimized && <Text style={{ fontSize: 20, marginTop: 10, color: this.props.screenProps.theme.slightlyMoreVisibleColour }}>
-                        {`We were not able to completely optimize your wallet. Error sending fusion transaction: ${this.state.error}`}
-                    </Text>}
-                </View>
-            </View>
-        );
-    }
-}
-
 /**
  * Fuck w/ stuff
  */
@@ -817,7 +696,6 @@ export class SettingsScreen extends React.Component {
             limitData: Globals.preferences.limitData,
             darkMode: Globals.preferences.theme === 'darkMode',
             authConfirmation: Globals.preferences.authConfirmation,
-            autoOptimize: Globals.preferences.autoOptimize,
         }
     }
 
@@ -1081,39 +959,6 @@ export class SettingsScreen extends React.Component {
                                 checked: this.state.scanCoinbase,
                             },
                             {
-                                title: 'Enable Auto Optimization',
-                                description: 'Helps sending large TXs (See FAQ)',
-                                icon: {
-                                    iconName: 'refresh',
-                                    IconType: SimpleLineIcons,
-                                },
-                                onClick: () => {
-                                    Globals.preferences.autoOptimize = !Globals.preferences.autoOptimize;
-
-                                    this.setState({
-                                        autoOptimize: Globals.preferences.autoOptimize,
-                                    });
-
-                                    Globals.wallet.enableAutoOptimization(Globals.preferences.autoOptimize);
-                                    toastPopUp(Globals.preferences.autoOptimize ? 'Auto Optimization enabled' : 'Auto Optimization disabled');
-                                    savePreferencesToDatabase(Globals.preferences);
-                                },
-                                checkbox: true,
-                                checked: this.state.autoOptimize,
-                            },
-                            {
-                                title: 'Manually Optimize Wallet',
-                                description: 'Helps sending large TXs (See FAQ)',
-                                icon: {
-                                    iconName: 'refresh',
-                                    IconType: SimpleLineIcons,
-                                },
-                                onClick: () => {
-                                    optimizeWallet(this.props.navigation);
-                                },
-
-                            },
-                            {
                                 title: `View ${Config.appName} on ${Platform.OS === 'ios' ? 'the App Store' : 'Google Play'}`,
                                 description: 'Leave a rating or send the link to your friends',
                                 icon: {
@@ -1291,15 +1136,3 @@ function rewindWallet(navigation) {
     );
 }
 
-function optimizeWallet(navigation) {
-    Alert.alert(
-        'Optimize Wallet?',
-        'Are you sure you want to attempt to optimize your wallet? This may lock your funds for some time.',
-        [
-            {text: 'Optimize', onPress: () => {
-                navigation.navigate('Optimize');
-            }},
-            {text: 'Cancel', style: 'cancel'},
-        ],
-    );
-}
