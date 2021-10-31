@@ -256,7 +256,7 @@ async function createTables(DB) {
                 `UPDATE
                     preferences
                 SET
-                    autooptimize = 0,
+                    autooptimize = 1,
                     authmethod = 'hardware-auth',
                     node = ?
                 WHERE
@@ -310,6 +310,7 @@ export async function savePreferencesToDatabase(preferences) {
                 limitdata = ?,
                 theme = ?,
                 pinconfirmation = ?,
+                autooptimize = ?,
                 authmethod = ?,
                 node = ?
             WHERE
@@ -321,6 +322,7 @@ export async function savePreferencesToDatabase(preferences) {
                 preferences.limitData ? 1 : 0,
                 preferences.theme,
                 preferences.authConfirmation ? 1 : 0,
+                preferences.autoOptimize ? 1 : 0,
                 preferences.authenticationMethod,
                 preferences.node,
             ]
@@ -337,6 +339,7 @@ export async function loadPreferencesFromDatabase() {
             limitdata,
             theme,
             pinconfirmation,
+            autooptimize,
             authmethod,
             node
         FROM
@@ -355,7 +358,7 @@ export async function loadPreferencesFromDatabase() {
             limitData: item.limitdata === 1,
             theme: item.theme,
             authConfirmation: item.pinconfirmation === 1,
-            autoOptimize: false,
+            autoOptimize: item.autooptimize === 1,
             authenticationMethod: item.authmethod,
             node: item.node,
         }

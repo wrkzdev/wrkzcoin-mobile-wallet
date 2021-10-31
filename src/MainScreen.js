@@ -38,6 +38,7 @@ import { coinsToFiat, getCoinPriceFromAPI } from './Currency';
 
 async function init(navigation) {
     Globals.wallet.scanCoinbaseTransactions(Globals.preferences.scanCoinbaseTransactions);
+    Globals.wallet.enableAutoOptimization(Globals.preferences.autoOptimize);
 
     /* Remove any previously added listeners */
     Globals.wallet.removeAllListeners('incomingtx');
