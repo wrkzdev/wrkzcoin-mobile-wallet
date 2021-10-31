@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build_name: ['bundle', 'apk', 'apkdbg']
+        build_name: ['bundle', 'apk']
     steps: 
       - uses: actions/checkout@v2
 
@@ -58,18 +58,6 @@ jobs:
         env:
           TOKEN: ${{ secrets.SENTRY_TOKEN }}
 
-      - name: Build Android Release APK Debug
-        if: matrix.build_name == 'apkdbg'
-        run: |
-          perl -pi -e 's/YOUR_SENTRY_TOKEN/$ENV{TOKEN}/' android/sentry.properties
-          export SENTRY_PROPERTIES=android/sentry.properties
-          npm install -g react-native-cli
-          mkdir android/app/src/main/assets
-          react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
-          cd android && ./gradlew assembleDebug
-        env:
-          TOKEN: ${{ secrets.SENTRY_TOKEN }}
-
       - name: Build Android Release AAB
         if: matrix.build_name == 'bundle'
         run: |
@@ -84,16 +72,6 @@ jobs:
         if: matrix.build_name == 'bundle' || matrix.build_name == 'apk'
         with:
           releaseDirectory: android/app/build/outputs/${{ matrix.build_name }}/release
-          signingKeyBase64: ${{ secrets.MYAPP_RELEASE_STORE_FILE_KEY }}
-          alias: ${{ secrets.MYAPP_RELEASE_KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.MYAPP_RELEASE_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.MYAPP_RELEASE_KEY_PASSWORD }}
-
-      - name: Sign APK Debug
-        uses: r0adkll/sign-android-release@v1
-        if: matrix.build_name == 'apkdbg'
-        with:
-          releaseDirectory: android/app/build/outputs/apk/debug
           signingKeyBase64: ${{ secrets.MYAPP_RELEASE_STORE_FILE_KEY }}
           alias: ${{ secrets.MYAPP_RELEASE_KEY_ALIAS }}
           keyStorePassword: ${{ secrets.MYAPP_RELEASE_STORE_PASSWORD }}
