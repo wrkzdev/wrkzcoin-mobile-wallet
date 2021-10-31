@@ -173,6 +173,13 @@ async function createTables(DB) {
                 `ALTER TABLE
                     preferences
                 ADD
+                    autooptimize BOOLEAN`
+            );
+
+            tx.executeSql(
+                `ALTER TABLE
+                    preferences
+                ADD
                     authmethod TEXT`
             );
         }
@@ -222,6 +229,7 @@ async function createTables(DB) {
                 limitdata,
                 theme,
                 pinconfirmation,
+                autooptimize,
                 authmethod,
                 node
             )
@@ -248,6 +256,7 @@ async function createTables(DB) {
                 `UPDATE
                     preferences
                 SET
+                    autooptimize = 0,
                     authmethod = 'hardware-auth',
                     node = ?
                 WHERE
@@ -346,6 +355,7 @@ export async function loadPreferencesFromDatabase() {
             limitData: item.limitdata === 1,
             theme: item.theme,
             authConfirmation: item.pinconfirmation === 1,
+            autoOptimize: false,
             authenticationMethod: item.authmethod,
             node: item.node,
         }
