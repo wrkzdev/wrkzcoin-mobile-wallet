@@ -322,7 +322,7 @@ export async function savePreferencesToDatabase(preferences) {
                 preferences.limitData ? 1 : 0,
                 preferences.theme,
                 preferences.authConfirmation ? 1 : 0,
-                preferences.autoOptimize ? 1 : 0,
+                preferences.autoOptimize ? 0 : 0,
                 preferences.authenticationMethod,
                 preferences.node,
             ]

@@ -42,7 +42,7 @@ class globals {
             limitData: false,
             theme: 'darkMode',
             authConfirmation: false,
-            autoOptimize: true,
+            autoOptimize: false,
             authenticationMethod: 'hardware-auth',
             node: Config.defaultDaemon.getConnectionString(),
         };
