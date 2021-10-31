@@ -806,7 +806,7 @@ export class ConfirmScreen extends React.Component {
         if (this.state.sendAll) {
             payments.push([
                 this.state.payee.address,
-                (networkHeight >= Config.feePerByteHeight) ? 1 : (this.state.unlockedBalance - this.state.nodeFee - txFee), /* Amount does not matter for sendAll destination */
+                this.state.unlockedBalance - this.state.nodeFee - txFee, /* Amount does not matter for sendAll destination */
             ]);
         } else {
             payments.push([
